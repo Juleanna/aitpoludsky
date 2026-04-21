@@ -1,9 +1,8 @@
-// Стилізований wordmark бренду: "ait·poludsky".
-// - "ait" — приглушений Geist (sans-serif)
+// Стилізований wordmark бренду: "AIT · Poludsky".
+// - "AIT" — uppercase Geist (sans-serif), розширений трекінг як для акроніма
 // - "·" — акцентна середня крапка
-// - "poludsky" — Newsreader italic з descender-ami (p, l, d, k, y)
-//   Нижня частина більша і виразніша — домінує візуально,
-//   тоді як "ait" виконує роль префікса-підпису.
+// - "Poludsky" — Newsreader italic, Title case, з descender-ами (p, l, d, k, y)
+//   які формують виразну нижню лінію і домінують візуально.
 type Size = "sm" | "md" | "lg";
 
 type Props = {
@@ -13,9 +12,9 @@ type Props = {
 };
 
 const SIZE_MAP: Record<Size, { root: number; aitScale: number }> = {
-  sm: { root: 14, aitScale: 0.9 },
-  md: { root: 20, aitScale: 0.82 },
-  lg: { root: 30, aitScale: 0.76 },
+  sm: { root: 14, aitScale: 0.78 },
+  md: { root: 20, aitScale: 0.72 },
+  lg: { root: 30, aitScale: 0.66 },
 };
 
 export function Brand({ size = "md", tight = false }: Props) {
@@ -35,14 +34,14 @@ export function Brand({ size = "md", tight = false }: Props) {
       <span
         style={{
           fontFamily: "var(--font-ui)",
-          fontWeight: 500,
-          color: "var(--text-3)",
-          letterSpacing: "0.04em",
+          fontWeight: 600,
+          color: "var(--text-2)",
+          letterSpacing: "0.1em",
           fontSize: `${aitScale}em`,
-          textTransform: "lowercase",
+          textTransform: "uppercase",
         }}
       >
-        ait
+        AIT
       </span>
       <span
         aria-hidden
@@ -50,7 +49,7 @@ export function Brand({ size = "md", tight = false }: Props) {
           fontFamily: "var(--font-display)",
           color: "var(--accent-ink)",
           fontStyle: "italic",
-          padding: "0 3px",
+          padding: "0 5px",
           fontSize: "1.05em",
         }}
       >
@@ -65,7 +64,7 @@ export function Brand({ size = "md", tight = false }: Props) {
           letterSpacing: "-0.02em",
         }}
       >
-        poludsky
+        Poludsky
       </span>
     </span>
   );

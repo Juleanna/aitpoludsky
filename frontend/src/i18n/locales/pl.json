@@ -1,5 +1,5 @@
 {
-  "app": { "name": "aitpoludsky", "tagline": "SaaS" },
+  "app": { "name": "AIT · Poludsky", "tagline": "SaaS" },
   "landing": {
     "nav": {
       "features": "Funkcje",
@@ -72,7 +72,7 @@
       "subtitle": "Utwórz swój pierwszy sklep już teraz — to darmowe."
     },
     "footer": {
-      "copyright": "© {{year}} aitpoludsky · ukraiński SaaS e-commerce"
+      "copyright": "© {{year}} AIT · Poludsky — ukraiński SaaS e-commerce"
     }
   },
   "nav": {
