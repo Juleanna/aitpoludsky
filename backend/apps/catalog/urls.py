@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from .views import (
+    CategoryViewSet,
     ProductImageDetailView,
     ProductImageSetPrimaryView,
     ProductImagesReorderView,
@@ -11,6 +12,7 @@ from .views import (
 
 router = DefaultRouter()
 router.register("products", ProductViewSet, basename="product")
+router.register("categories", CategoryViewSet, basename="category")
 
 # Endpoint-и зображень живуть поза router-ом, щоб уникнути конфліктів шляхів.
 # Router дає: /products/, /products/<pk>/

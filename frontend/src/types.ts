@@ -23,7 +23,18 @@ export type Currency = Shop["currency"];
 
 export type ProductTranslations = Record<string, { name?: string; description?: string }>;
 
-export type ProductCategory = "coffee" | "clothes" | "cosmetics" | "handmade" | "food" | "other";
+export type Category = {
+  id: number;
+  name: string;
+  position: number;
+  created_at: string;
+};
+
+export type CategoryInput = {
+  name: string;
+  position?: number;
+};
+
 export type ProductVatStatus = "none" | "20" | "7";
 export type ProductChannel = "web" | "ig" | "google" | "pos";
 
@@ -59,8 +70,9 @@ export type Product = {
   sku: string;
   name: string;
   description: string;
-  // Категорія та бренд
-  category: ProductCategory;
+  // Категорія (FK на Category; nullable — товар може бути без категорії) та бренд
+  category: number | null;
+  category_name?: string;
   brand: string;
   producer: string;
   tags: string[];
@@ -93,7 +105,7 @@ export type ProductInput = {
   sku: string;
   name: string;
   description?: string;
-  category?: ProductCategory;
+  category?: number | null;
   brand?: string;
   producer?: string;
   tags?: string[];

@@ -306,6 +306,18 @@
     "translationsHint": "Sprachen kommen aus den Shop-Einstellungen. Hauptfelder sind in der Standardsprache.",
     "noExtraLanguages": "Shop hat nur die Standardsprache. Weitere in den Shop-Einstellungen hinzufügen."
   },
+  "categories": {
+    "title": "Kategorien",
+    "subtitle": "Shop: {{shop}} · {{count}} Kategorien",
+    "add": "Hinzufügen",
+    "namePlaceholder": "Name der neuen Kategorie…",
+    "colName": "Name",
+    "colActions": "Aktionen",
+    "moveUp": "Nach oben",
+    "moveDown": "Nach unten",
+    "empty": "Noch keine Kategorien. Die erste hinzufügen.",
+    "deleteConfirm": "Kategorie löschen? Produkte verlieren die Kategorie."
+  },
   "newProduct": {
     "breadcrumb": "Neu",
     "titleBefore": "Neues",
@@ -328,6 +340,8 @@
       "brand": "Marke",
       "producer": "Hersteller",
       "categoryHint": "wirkt auf SEO und Filter",
+      "categoryNone": "keine Kategorie",
+      "categoryManage": "Kategorien verwalten",
       "tags": "Tags",
       "tagPlaceholder": "Tag hinzufügen…",
       "price": "Verkaufspreis",

@@ -5,9 +5,20 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Product, ProductImage
+from .models import Category, Product, ProductImage
 from .permissions import IsShopMember
-from .serializers import ProductImageSerializer, ProductSerializer
+from .serializers import CategorySerializer, ProductImageSerializer, ProductSerializer
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated, IsShopMember]
+
+    def get_queryset(self):
+        return Category.objects.filter(shop=self.request.shop)
+
+    def perform_create(self, serializer):
+        serializer.save(shop=self.request.shop)
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -15,7 +26,11 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsShopMember]
 
     def get_queryset(self):
-        return Product.objects.filter(shop=self.request.shop).prefetch_related("variants", "images")
+        return (
+            Product.objects.filter(shop=self.request.shop)
+            .select_related("category")
+            .prefetch_related("variants", "images")
+        )
 
     def perform_create(self, serializer):
         serializer.save(shop=self.request.shop)

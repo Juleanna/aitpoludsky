@@ -306,6 +306,18 @@
     "translationsHint": "Languages come from shop settings. Main fields are in the default language.",
     "noExtraLanguages": "Shop has only the default language. Add more in shop settings."
   },
+  "categories": {
+    "title": "Categories",
+    "subtitle": "Shop: {{shop}} · {{count}} categories",
+    "add": "Add",
+    "namePlaceholder": "New category name…",
+    "colName": "Name",
+    "colActions": "Actions",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "empty": "No categories yet. Add the first one.",
+    "deleteConfirm": "Delete category? Its products will remain uncategorized."
+  },
   "newProduct": {
     "breadcrumb": "New",
     "titleBefore": "New",
@@ -328,6 +340,8 @@
       "brand": "Brand",
       "producer": "Manufacturer",
       "categoryHint": "affects SEO and filters",
+      "categoryNone": "no category",
+      "categoryManage": "Manage categories",
       "tags": "Tags",
       "tagPlaceholder": "add tag…",
       "price": "Selling price",

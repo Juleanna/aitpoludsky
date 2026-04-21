@@ -3,16 +3,26 @@ from django.db import models
 from apps.shops.models import Shop
 
 
+class Category(models.Model):
+    """Категорія товарів магазину. Власна — кожен магазин веде свій список."""
+
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name="categories")
+    name = models.CharField(max_length=100)
+    position = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("position", "id")
+        constraints = [
+            models.UniqueConstraint(fields=("shop", "name"), name="catalog_unique_category_per_shop"),
+        ]
+
+    def __str__(self):
+        return f"{self.shop.slug} · {self.name}"
+
+
 class Product(models.Model):
     """Товар магазину. Містить всі комерційні, медіа-, SEO- і маркетингові поля."""
-
-    class Category(models.TextChoices):
-        COFFEE = "coffee", "Кава та чай"
-        CLOTHES = "clothes", "Одяг"
-        COSMETICS = "cosmetics", "Косметика"
-        HANDMADE = "handmade", "Хендмейд"
-        FOOD = "food", "Продукти"
-        OTHER = "other", "Інше"
 
     class VatStatus(models.TextChoices):
         NONE = "none", "Без ПДВ"
@@ -25,11 +35,13 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
 
-    # Категоризація (впливає на фільтри і SEO)
-    category = models.CharField(
-        max_length=20,
-        choices=Category.choices,
-        default=Category.OTHER,
+    # Категоризація (впливає на фільтри і SEO). Кожен магазин веде свій список.
+    category = models.ForeignKey(
+        Category,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="products",
     )
     brand = models.CharField(max_length=120, blank=True)
     producer = models.CharField(max_length=120, blank=True)
@@ -99,7 +111,6 @@ class Product(models.Model):
         ]
         indexes = [
             models.Index(fields=("shop", "is_active")),
-            models.Index(fields=("shop", "category")),
         ]
 
     def __str__(self):

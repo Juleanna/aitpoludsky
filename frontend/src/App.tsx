@@ -7,6 +7,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ShopProvider } from "@/context/ShopContext";
 import { TweaksProvider } from "@/context/TweaksContext";
 import { CatalogPage } from "@/pages/CatalogPage";
+import { CategoriesPage } from "@/pages/CategoriesPage";
 import { ComingSoonPage } from "@/pages/ComingSoonPage";
 import { CustomersPage } from "@/pages/CustomersPage";
 import { DashboardPage } from "@/pages/DashboardPage";
@@ -76,6 +77,7 @@ export function App() {
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/catalog" element={<CatalogPage />} />
                 <Route path="/catalog/new" element={<NewProductPage />} />
+                <Route path="/categories" element={<CategoriesPage />} />
                 <Route path="/customers" element={<CustomersPage />} />
                 <Route path="/discounts" element={<DiscountsPage />} />
                 <Route

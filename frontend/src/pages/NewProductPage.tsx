@@ -7,7 +7,7 @@ import * as catalogApi from "@/api/catalog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
 import type {
-  ProductCategory,
+  Category,
   ProductChannel,
   ProductInput,
   ProductVariantInput,
@@ -84,7 +84,10 @@ export function NewProductPage() {
   // Основне
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState<ProductCategory>("coffee");
+  // Список категорій магазину (shop-scoped). Підвантажується після маунту,
+  // щоб підставити перший id у selectʼі. null = «без категорії».
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [category, setCategory] = useState<number | null>(null);
   const [brand, setBrand] = useState(activeShop?.name ?? "");
   const [producer, setProducer] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -226,6 +229,35 @@ export function NewProductPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Підвантажуємо категорії поточного магазину. При перемиканні магазину —
+  // скидаємо вибраний id (щоб не лишився id з іншого магазину).
+  useEffect(() => {
+    if (!activeShop) return;
+    let cancelled = false;
+    void catalogApi
+      .listCategories(activeShop.slug)
+      .then((rows) => {
+        if (cancelled) return;
+        setCategories(rows);
+        setCategory((prev) => {
+          if (prev && rows.some((r) => r.id === prev)) return prev;
+          return rows.length > 0 ? rows[0].id : null;
+        });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setCategories([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeShop?.slug]);
+
+  const selectedCategoryName = useMemo(
+    () => categories.find((c) => c.id === category)?.name ?? "",
+    [categories, category],
+  );
 
   // Розрахунки для правої колонки.
   const margin = useMemo(() => {
@@ -404,15 +436,15 @@ export function NewProductPage() {
               <Field label={t("newProduct.fields.category")}>
                 <select
                   className="onb-input"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value as ProductCategory)}
+                  value={category ?? ""}
+                  onChange={(e) => setCategory(e.target.value ? Number(e.target.value) : null)}
                 >
-                  <option value="coffee">{t("onboarding.categories.coffee")}</option>
-                  <option value="clothes">{t("onboarding.categories.clothes")}</option>
-                  <option value="cosmetics">{t("onboarding.categories.cosmetics")}</option>
-                  <option value="handmade">{t("onboarding.categories.handmade")}</option>
-                  <option value="food">{t("onboarding.categories.food")}</option>
-                  <option value="other">{t("onboarding.categories.other")}</option>
+                  <option value="">{t("newProduct.fields.categoryNone")}</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
                 </select>
               </Field>
               <Field label={t("newProduct.fields.brand")}>
@@ -426,8 +458,11 @@ export function NewProductPage() {
                 />
               </Field>
             </div>
-            <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 4 }}>
-              {t("newProduct.fields.categoryHint")}
+            <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 4, display: "flex", justifyContent: "space-between", gap: 8 }}>
+              <span>{t("newProduct.fields.categoryHint")}</span>
+              <Link to="/categories" style={{ color: "var(--accent)", textDecoration: "none" }}>
+                {t("newProduct.fields.categoryManage")} →
+              </Link>
             </div>
 
             <Field label={t("newProduct.fields.tags")}>
@@ -805,7 +840,7 @@ export function NewProductPage() {
               <div className="product-thumb" data-tone="1" style={{ aspectRatio: "1" }} />
               <div style={{ padding: 14 }}>
                 <div className="mono" style={{ fontSize: 11, color: "var(--text-3)" }}>
-                  {t(`onboarding.categories.${category}`).toUpperCase()}
+                  {(selectedCategoryName || t("newProduct.fields.categoryNone")).toUpperCase()}
                 </div>
                 <div style={{ fontSize: 15, fontWeight: 500, marginTop: 4 }}>
                   {name || t("newProduct.preview.placeholderName")}

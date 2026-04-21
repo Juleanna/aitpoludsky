@@ -3,10 +3,29 @@ from rest_framework import serializers
 
 from apps.shops.constants import LANGUAGE_CODES
 
-from .models import Product, ProductImage, ProductVariant
+from .models import Category, Product, ProductImage, ProductVariant
 
 _TRANSLATABLE_FIELDS = {"name", "description"}
 _CHANNEL_VALUES = {"web", "ig", "google", "pos"}
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ("id", "name", "position", "created_at")
+        read_only_fields = ("id", "created_at")
+
+    def validate_name(self, value: str) -> str:
+        value = (value or "").strip()
+        if not value:
+            raise serializers.ValidationError("Назва не може бути порожньою.")
+        shop = self.context["request"].shop
+        qs = Category.objects.filter(shop=shop, name__iexact=value)
+        if self.instance is not None:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError("Категорія з такою назвою вже існує.")
+        return value
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
@@ -39,6 +58,9 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     variants = ProductVariantSerializer(many=True, required=False)
     images = ProductImageSerializer(many=True, read_only=True)
+    # category — FK на Category (shop-scoped). Додаємо category_name read-only
+    # для зручності фронту, щоб не робити окремий lookup.
+    category_name = serializers.CharField(source="category.name", read_only=True, default="")
 
     class Meta:
         model = Product
@@ -49,6 +71,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "category",
+            "category_name",
             "brand",
             "producer",
             "tags",
@@ -150,6 +173,14 @@ class ProductSerializer(serializers.ModelSerializer):
             if ch not in cleaned:
                 cleaned.append(ch)
         return cleaned
+
+    def validate_category(self, value):
+        if value is None:
+            return value
+        shop = self.context["request"].shop
+        if value.shop_id != shop.id:
+            raise serializers.ValidationError("Категорія не належить поточному магазину.")
+        return value
 
     def validate_url_slug(self, value):
         if not value:

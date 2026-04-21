@@ -1,6 +1,14 @@
 from django.contrib import admin
 
-from .models import Product, ProductImage, ProductVariant
+from .models import Category, Product, ProductImage, ProductVariant
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "shop", "position", "created_at")
+    list_filter = ("shop",)
+    search_fields = ("name", "shop__name", "shop__slug")
+    autocomplete_fields = ("shop",)
 
 
 class ProductVariantInline(admin.TabularInline):
