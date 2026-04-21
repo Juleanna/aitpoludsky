@@ -7,6 +7,7 @@ import * as inboxApi from "@/api/inbox";
 import { UI_LANGUAGES } from "@/i18n";
 import { useAuth } from "@/context/AuthContext";
 import { useShops } from "@/context/ShopContext";
+import { useTweaks } from "@/context/TweaksContext";
 import { Brand } from "./Brand";
 import { Icon } from "./Icon";
 import { MariaAssistant } from "./MariaAssistant";
@@ -112,18 +113,13 @@ export function Shell() {
 
   const [counts, setCounts] = useState<SidebarCounts>({ orders: 0, catalog: 0, inbox: 0, locations: 0 });
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  // Згорнутий sidebar — читаємо/пишемо в localStorage, щоб зберігати стан
-  // між перезавантаженнями сторінки.
-  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(
-    () => localStorage.getItem("ait_sidebar_collapsed") === "1",
-  );
+  // Згорнутий sidebar — тепер частина глобальних Tweaks (TweaksContext),
+  // щоб Tweaks-панель могла його перемикати.
+  const { tweaks, update } = useTweaks();
+  const sidebarCollapsed = tweaks.sidebarCompact;
   const toggleSidebar = useCallback(() => {
-    setSidebarCollapsed((v) => {
-      const next = !v;
-      localStorage.setItem("ait_sidebar_collapsed", next ? "1" : "0");
-      return next;
-    });
-  }, []);
+    update("sidebarCompact", !tweaks.sidebarCompact);
+  }, [update, tweaks.sidebarCompact]);
 
   // Лічильники для бейджів у сайдбарі — зі зведеного дашборд-ендпоінту
   // плюс окремий запит на inbox (непрочитані треди).

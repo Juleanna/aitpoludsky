@@ -430,6 +430,30 @@
     "notifications": "Notifications",
     "quickScreens": "Quick screens"
   },
+  "tweaks": {
+    "openLabel": "Interface settings",
+    "reset": "Reset",
+    "resetTitle": "Reset to defaults",
+    "theme": "Theme",
+    "themes": { "light": "Light", "dark": "Dark" },
+    "accent": "Accent",
+    "accents": {
+      "amber": "Amber",
+      "cobalt": "Cobalt",
+      "moss": "Moss",
+      "rose": "Rose",
+      "ink": "Ink"
+    },
+    "sidebar": "Sidebar",
+    "sidebarModes": { "expanded": "Expanded", "compact": "Compact" },
+    "seasonal": "Season",
+    "seasons": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "christmas": "Christmas",
+      "blackFriday": "Black Fri."
+    }
+  },
   "maria": {
     "name": "Maria",
     "subtitle": "AI assistant",

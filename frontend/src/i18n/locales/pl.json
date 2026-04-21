@@ -430,6 +430,30 @@
     "notifications": "Powiadomienia",
     "quickScreens": "Szybkie ekrany"
   },
+  "tweaks": {
+    "openLabel": "Ustawienia interfejsu",
+    "reset": "Reset",
+    "resetTitle": "Przywróć domyślne",
+    "theme": "Motyw",
+    "themes": { "light": "Jasny", "dark": "Ciemny" },
+    "accent": "Akcent",
+    "accents": {
+      "amber": "Bursztyn",
+      "cobalt": "Kobalt",
+      "moss": "Mech",
+      "rose": "Róża",
+      "ink": "Atrament"
+    },
+    "sidebar": "Menu boczne",
+    "sidebarModes": { "expanded": "Rozwinięte", "compact": "Kompaktowe" },
+    "seasonal": "Sezon",
+    "seasons": {
+      "spring": "Wiosna",
+      "summer": "Lato",
+      "christmas": "Boże Nar.",
+      "blackFriday": "Black Fri."
+    }
+  },
   "maria": {
     "name": "Maria",
     "subtitle": "AI asystentka",

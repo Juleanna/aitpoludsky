@@ -430,6 +430,30 @@
     "notifications": "Benachrichtigungen",
     "quickScreens": "Schnelle Bildschirme"
   },
+  "tweaks": {
+    "openLabel": "Oberflächeneinstellungen",
+    "reset": "Reset",
+    "resetTitle": "Standard wiederherstellen",
+    "theme": "Theme",
+    "themes": { "light": "Hell", "dark": "Dunkel" },
+    "accent": "Akzent",
+    "accents": {
+      "amber": "Bernstein",
+      "cobalt": "Kobalt",
+      "moss": "Moos",
+      "rose": "Rose",
+      "ink": "Tinte"
+    },
+    "sidebar": "Seitenleiste",
+    "sidebarModes": { "expanded": "Erweitert", "compact": "Kompakt" },
+    "seasonal": "Saison",
+    "seasons": {
+      "spring": "Frühling",
+      "summer": "Sommer",
+      "christmas": "Weihnachten",
+      "blackFriday": "Black Fri."
+    }
+  },
   "maria": {
     "name": "Maria",
     "subtitle": "KI-Assistentin",

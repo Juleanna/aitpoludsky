@@ -430,6 +430,30 @@
     "notifications": "Сповіщення",
     "quickScreens": "Швидкі екрани"
   },
+  "tweaks": {
+    "openLabel": "Налаштування інтерфейсу",
+    "reset": "Скинути",
+    "resetTitle": "Повернути значення за замовчуванням",
+    "theme": "Тема",
+    "themes": { "light": "Світла", "dark": "Темна" },
+    "accent": "Акцент",
+    "accents": {
+      "amber": "Бурштин",
+      "cobalt": "Кобальт",
+      "moss": "Мох",
+      "rose": "Роза",
+      "ink": "Чорнило"
+    },
+    "sidebar": "Сайдбар",
+    "sidebarModes": { "expanded": "Розгорнутий", "compact": "Компактний" },
+    "seasonal": "Сезон",
+    "seasons": {
+      "spring": "Весна",
+      "summer": "Літо",
+      "christmas": "Різдво",
+      "blackFriday": "Чорна п."
+    }
+  },
   "maria": {
     "name": "Марія",
     "subtitle": "AI-помічниця",
