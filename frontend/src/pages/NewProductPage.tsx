@@ -111,6 +111,10 @@ export function NewProductPage() {
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // Стан drag-and-drop для перевпорядкування зображень.
+  // dragIndex — що тягнемо; overIndex — куди ховер (для візуальної підсвітки).
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
 
   // Канали публікації
   const [channels, setChannels] = useState<Set<ProductChannel>>(new Set(["web", "ig", "pos"]));
@@ -198,6 +202,22 @@ export function NewProductPage() {
     if (url) URL.revokeObjectURL(url);
     setMediaFiles((prev) => prev.filter((_, i) => i !== index));
     setMediaPreviews((prev) => prev.filter((_, i) => i !== index));
+  }
+  // Переставляє елемент із індексу from у target у двох паралельних масивах.
+  function moveFile(from: number, to: number) {
+    if (from === to) return;
+    setMediaFiles((prev) => {
+      const next = [...prev];
+      const [item] = next.splice(from, 1);
+      next.splice(to, 0, item);
+      return next;
+    });
+    setMediaPreviews((prev) => {
+      const next = [...prev];
+      const [item] = next.splice(from, 1);
+      next.splice(to, 0, item);
+      return next;
+    });
   }
   // Прибираємо object URLs при розмонтуванні.
   useEffect(() => {
@@ -457,12 +477,41 @@ export function NewProductPage() {
             />
             <div className="np-media-grid">
               {mediaPreviews.map((url, i) => (
-                <div key={url} className="np-media-slot">
+                <div
+                  key={url}
+                  className={`np-media-slot${dragIndex === i ? " dragging" : ""}${overIndex === i && dragIndex !== null && dragIndex !== i ? " drag-over" : ""}`}
+                  draggable
+                  onDragStart={(e) => {
+                    setDragIndex(i);
+                    e.dataTransfer.effectAllowed = "move";
+                    // Firefox не починає drag без setData.
+                    e.dataTransfer.setData("text/plain", String(i));
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "move";
+                    if (overIndex !== i) setOverIndex(i);
+                  }}
+                  onDragLeave={() => {
+                    if (overIndex === i) setOverIndex(null);
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (dragIndex !== null) moveFile(dragIndex, i);
+                    setDragIndex(null);
+                    setOverIndex(null);
+                  }}
+                  onDragEnd={() => {
+                    setDragIndex(null);
+                    setOverIndex(null);
+                  }}
+                >
                   {i === 0 && <span className="np-media-badge">{t("newProduct.media.primary")}</span>}
                   <img
                     src={url}
                     alt=""
                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    draggable={false}
                   />
                   <button
                     type="button"

@@ -137,8 +137,12 @@
 
 /* Медіа сітка */
 .np-media-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 8px; }
-.np-media-slot { position: relative; aspect-ratio: 1; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: grab; }
+.np-media-slot { position: relative; aspect-ratio: 1; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: grab; transition: border-color 0.12s, opacity 0.12s, transform 0.12s; }
 .np-media-slot:active { cursor: grabbing; }
+/* DnD-стан: елемент, який тягнемо, напівпрозорий */
+.np-media-slot.dragging { opacity: 0.35; }
+/* DnD-стан: слот, над яким зараз курсор — підсвічуємо акцентом */
+.np-media-slot.drag-over { border: 2px dashed var(--accent); transform: scale(1.02); }
 .np-media-slot .product-thumb { aspect-ratio: 1; }
 .np-media-drag { position: absolute; top: 6px; left: 6px; color: oklch(0.4 0.01 60 / 0.6); z-index: 1; }
 .np-media-badge { position: absolute; top: 6px; left: 22px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.05em; background: var(--accent); color: white; padding: 2px 6px; border-radius: 3px; z-index: 1; }
