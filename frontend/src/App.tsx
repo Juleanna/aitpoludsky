@@ -1,0 +1,58 @@
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+import { RequireAuth, RequireGuest } from "@/components/RequireAuth";
+import { Shell } from "@/components/Shell";
+import { AuthProvider } from "@/context/AuthContext";
+import { ShopProvider } from "@/context/ShopContext";
+import { CatalogPage } from "@/pages/CatalogPage";
+import { CustomersPage } from "@/pages/CustomersPage";
+import { DashboardPage } from "@/pages/DashboardPage";
+import { InventoryPage } from "@/pages/InventoryPage";
+import { LoginPage } from "@/pages/LoginPage";
+import { OrdersPage } from "@/pages/OrdersPage";
+import { ShopsPage } from "@/pages/ShopsPage";
+import { SignupPage } from "@/pages/SignupPage";
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <ShopProvider>
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                <RequireGuest>
+                  <LoginPage />
+                </RequireGuest>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <RequireGuest>
+                  <SignupPage />
+                </RequireGuest>
+              }
+            />
+            <Route
+              element={
+                <RequireAuth>
+                  <Shell />
+                </RequireAuth>
+              }
+            >
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/orders" element={<OrdersPage />} />
+              <Route path="/catalog" element={<CatalogPage />} />
+              <Route path="/customers" element={<CustomersPage />} />
+              <Route path="/inventory" element={<InventoryPage />} />
+              <Route path="/shops" element={<ShopsPage />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </ShopProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
