@@ -346,19 +346,14 @@ export function Shell() {
               {counts.inbox > 0 && <span className="topbar-badge">{counts.inbox}</span>}
             </button>
 
-            {/* Користувач — аватар + імʼя */}
-            <div className="topbar-user" title={user?.email}>
-              <div className="avatar">{userInitial}</div>
-              <span className="topbar-user-name">{userName}</span>
-            </div>
+            {/* Марія — AI-помічниця (замість юзер-pill; юзер лишається в sidebar-footer) */}
+            <MariaAssistant />
           </div>
         </header>
 
         <QuickScreens />
 
         <Outlet />
-
-        <MariaAssistant />
       </div>
     </div>
   );
