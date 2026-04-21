@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from apps.shops.constants import LANGUAGE_CODES
 
-from .models import Product, ProductVariant
+from .models import Product, ProductImage, ProductVariant
 
 _TRANSLATABLE_FIELDS = {"name", "description"}
 _CHANNEL_VALUES = {"web", "ig", "google", "pos"}
@@ -18,8 +18,27 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "sku", "price", "stock", "position")
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    # Абсолютний URL файлу (з розрахунку на request).
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductImage
+        fields = ("id", "image", "position", "is_primary", "alt", "created_at")
+        read_only_fields = ("id", "created_at")
+
+    def get_image(self, obj: ProductImage) -> str | None:
+        if not obj.image:
+            return None
+        request = self.context.get("request")
+        if request is not None:
+            return request.build_absolute_uri(obj.image.url)
+        return obj.image.url
+
+
 class ProductSerializer(serializers.ModelSerializer):
     variants = ProductVariantSerializer(many=True, required=False)
+    images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
@@ -49,9 +68,10 @@ class ProductSerializer(serializers.ModelSerializer):
             "url_slug",
             "meta_title",
             "meta_description",
-            # Канали та варіанти
+            # Канали, варіанти, медіа
             "channels",
             "variants",
+            "images",
             # Аудит
             "created_at",
             "updated_at",

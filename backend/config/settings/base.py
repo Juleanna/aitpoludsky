@@ -89,6 +89,13 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Media (завантажені файли: зображення товарів тощо).
+# У prod замінити storage на S3/GCS через DEFAULT_FILE_STORAGE.
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+# Обмеження розміру завантаження — 5 МБ на файл (картинки товарів).
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {

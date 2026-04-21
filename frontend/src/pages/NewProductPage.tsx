@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -6,7 +6,13 @@ import { ApiError } from "@/api/client";
 import * as catalogApi from "@/api/catalog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
-import type { ProductCategory, ProductChannel, ProductInput, ProductVatStatus } from "@/types";
+import type {
+  ProductCategory,
+  ProductChannel,
+  ProductInput,
+  ProductVariantInput,
+  ProductVatStatus,
+} from "@/types";
 import { formatMoney } from "@/utils/format";
 
 // Повноекранна сторінка створення нового товару. Повторює розкладку прототипу:
@@ -24,8 +30,51 @@ const CHANNELS: { key: ProductChannel; emoji: string; subKey: string }[] = [
 
 const META_TITLE_MAX = 60;
 const META_DESC_MAX = 160;
+const MAX_IMAGES = 9;
 
-type Variant = { id: string; name: string; price: string; stock: number; sku: string };
+// Опція товару: типу "Обсмажка" з набором значень ["Світла", "Темна"].
+type Option = { id: string; name: string; values: string[] };
+
+// Варіант у UI — генерується з опцій, редагується inline.
+type Variant = { key: string; name: string; price: string; stock: number; sku: string };
+
+// Декартів добуток значень опцій → список комбінацій.
+function cartesianOptions(opts: Option[]): string[][] {
+  const nonEmpty = opts.filter((o) => o.values.length > 0);
+  if (nonEmpty.length === 0) return [];
+  let combos: string[][] = [[]];
+  for (const opt of nonEmpty) {
+    const next: string[][] = [];
+    for (const combo of combos) {
+      for (const v of opt.values) next.push([...combo, v]);
+    }
+    combos = next;
+  }
+  return combos;
+}
+
+function buildVariants(opts: Option[], basePrice: string, baseSku: string): Variant[] {
+  const combos = cartesianOptions(opts);
+  return combos.map((combo) => {
+    const key = combo.join("__");
+    const skuSuffix = combo
+      .map((v) =>
+        v
+          .trim()
+          .toUpperCase()
+          .replace(/[^A-ZА-ЯЁҐЄІЇ0-9]+/gi, "")
+          .slice(0, 3),
+      )
+      .join("-");
+    return {
+      key,
+      name: combo.join(" / "),
+      price: basePrice,
+      stock: 0,
+      sku: baseSku ? `${baseSku}-${skuSuffix}` : skuSuffix,
+    };
+  });
+}
 
 export function NewProductPage() {
   const { t } = useTranslation();
@@ -53,7 +102,15 @@ export function NewProductPage() {
 
   // Варіанти
   const [hasVariants, setHasVariants] = useState(false);
-  const [variants] = useState<Variant[]>([]);
+  const [options, setOptions] = useState<Option[]>([
+    { id: "o-1", name: t("newProduct.variants.optionRoast"), values: [] },
+  ]);
+  const [variants, setVariants] = useState<Variant[]>([]);
+
+  // Медіа — File-обʼєкти перед uploadом. Реальне відправлення — після створення товару.
+  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
+  const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Канали публікації
   const [channels, setChannels] = useState<Set<ProductChannel>>(new Set(["web", "ig", "pos"]));
@@ -84,6 +141,72 @@ export function NewProductPage() {
     });
   }
 
+  // ── Варіанти: регенеруємо при зміні опцій / ціни / SKU ─────
+  // Зберігаємо вже введені price/stock/sku для існуючих комбінацій по key.
+  useEffect(() => {
+    if (!hasVariants) {
+      setVariants([]);
+      return;
+    }
+    setVariants((prev) => {
+      const byKey = new Map(prev.map((v) => [v.key, v]));
+      return buildVariants(options, price, sku).map((v) => {
+        const existing = byKey.get(v.key);
+        return existing ? { ...v, price: existing.price, stock: existing.stock, sku: existing.sku } : v;
+      });
+    });
+  }, [hasVariants, options, price, sku]);
+
+  function addOption() {
+    setOptions((prev) => [
+      ...prev,
+      { id: `o-${Date.now()}`, name: t("newProduct.variants.addOption"), values: [] },
+    ]);
+  }
+  function renameOption(id: string, nextName: string) {
+    setOptions((prev) => prev.map((o) => (o.id === id ? { ...o, name: nextName } : o)));
+  }
+  function addOptionValue(id: string, value: string) {
+    const v = value.trim();
+    if (!v) return;
+    setOptions((prev) =>
+      prev.map((o) => (o.id === id && !o.values.includes(v) ? { ...o, values: [...o.values, v] } : o)),
+    );
+  }
+  function removeOptionValue(id: string, value: string) {
+    setOptions((prev) => prev.map((o) => (o.id === id ? { ...o, values: o.values.filter((x) => x !== value) } : o)));
+  }
+  function removeOption(id: string) {
+    setOptions((prev) => prev.filter((o) => o.id !== id));
+  }
+  function editVariant(key: string, patch: Partial<Variant>) {
+    setVariants((prev) => prev.map((v) => (v.key === key ? { ...v, ...patch } : v)));
+  }
+
+  // ── Медіа: файли + previews ────────────────────────────
+  function addFiles(files: FileList | File[]) {
+    const newFiles = Array.from(files).filter((f) => f.type.startsWith("image/"));
+    if (newFiles.length === 0) return;
+    const room = MAX_IMAGES - mediaFiles.length;
+    const toAdd = newFiles.slice(0, Math.max(0, room));
+    const newPreviews = toAdd.map((f) => URL.createObjectURL(f));
+    setMediaFiles((prev) => [...prev, ...toAdd]);
+    setMediaPreviews((prev) => [...prev, ...newPreviews]);
+  }
+  function removeFileAt(index: number) {
+    const url = mediaPreviews[index];
+    if (url) URL.revokeObjectURL(url);
+    setMediaFiles((prev) => prev.filter((_, i) => i !== index));
+    setMediaPreviews((prev) => prev.filter((_, i) => i !== index));
+  }
+  // Прибираємо object URLs при розмонтуванні.
+  useEffect(() => {
+    return () => {
+      mediaPreviews.forEach((u) => URL.revokeObjectURL(u));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Розрахунки для правої колонки.
   const margin = useMemo(() => {
     const p = Number(price) || 0;
@@ -104,6 +227,15 @@ export function NewProductPage() {
     setBusy(true);
     setError(null);
     try {
+      const variantsPayload: ProductVariantInput[] = hasVariants
+        ? variants.map((v, i) => ({
+            name: v.name,
+            sku: v.sku,
+            price: v.price,
+            stock: v.stock,
+            position: i,
+          }))
+        : [];
       const payload: ProductInput = {
         name,
         sku,
@@ -124,8 +256,18 @@ export function NewProductPage() {
         meta_title: metaTitle,
         meta_description: metaDesc,
         channels: Array.from(channels),
+        variants: variantsPayload,
       };
-      await catalogApi.createProduct(activeShop.slug, payload);
+      const created = await catalogApi.createProduct(activeShop.slug, payload);
+      // Послідовно аплоадимо зображення, щоб зберегти порядок на сервері.
+      for (const file of mediaFiles) {
+        try {
+          await catalogApi.uploadProductImage(activeShop.slug, created.id, file);
+        } catch {
+          // Не блокуємо redirect — показуємо alert і продовжуємо.
+          window.alert(`${file.name}: ${t("newProduct.media.uploadFailed")}`);
+        }
+      }
       navigate("/catalog");
     } catch (err) {
       if (err instanceof ApiError) {
@@ -297,24 +439,51 @@ export function NewProductPage() {
             </Field>
           </section>
 
-          {/* Медіа */}
+          {/* Медіа — реальний file upload, preview через object URL.
+              Файли завантажуються на бекенд після створення товару. */}
           <section className="np-card">
             <h3 className="np-section-title">{t("newProduct.sections.media")}</h3>
             <div className="np-sub">{t("newProduct.media.hint")}</div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              style={{ display: "none" }}
+              onChange={(e) => {
+                if (e.target.files) addFiles(e.target.files);
+                e.target.value = "";
+              }}
+            />
             <div className="np-media-grid">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="np-media-slot">
-                  <span className="np-media-drag">
-                    <Icon name="drag" size={14} />
-                  </span>
+              {mediaPreviews.map((url, i) => (
+                <div key={url} className="np-media-slot">
                   {i === 0 && <span className="np-media-badge">{t("newProduct.media.primary")}</span>}
-                  <div className="product-thumb" data-tone={String(i + 1)} />
+                  <img
+                    src={url}
+                    alt=""
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                  />
+                  <button
+                    type="button"
+                    className="np-media-remove"
+                    onClick={() => removeFileAt(i)}
+                    aria-label={t("common.delete")}
+                  >
+                    ×
+                  </button>
                 </div>
               ))}
-              <button type="button" className="np-media-add">
-                <Icon name="plus" size={18} />
-                <span style={{ fontSize: 12 }}>{t("newProduct.media.add")}</span>
-              </button>
+              {mediaFiles.length < MAX_IMAGES && (
+                <button
+                  type="button"
+                  className="np-media-add"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Icon name="plus" size={18} />
+                  <span style={{ fontSize: 12 }}>{t("newProduct.media.add")}</span>
+                </button>
+              )}
             </div>
           </section>
 
@@ -423,17 +592,26 @@ export function NewProductPage() {
             <div className="np-sub">{t("newProduct.variants.hint")}</div>
             {hasVariants && (
               <>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
-                  <button type="button" className="btn">
-                    {t("newProduct.variants.optionRoast")}
-                  </button>
-                  <button type="button" className="btn">
-                    {t("newProduct.variants.optionWeight")}
-                  </button>
-                  <button type="button" className="btn ghost">
-                    <Icon name="plus" size={12} /> {t("newProduct.variants.addOption")}
-                  </button>
+                {/* Редактор опцій: кожна опція — ім'я + набір значень-chip */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
+                  {options.map((opt) => (
+                    <OptionRow
+                      key={opt.id}
+                      option={opt}
+                      onRename={(n) => renameOption(opt.id, n)}
+                      onAddValue={(v) => addOptionValue(opt.id, v)}
+                      onRemoveValue={(v) => removeOptionValue(opt.id, v)}
+                      onRemove={() => removeOption(opt.id)}
+                    />
+                  ))}
+                  <div>
+                    <button type="button" className="btn ghost" onClick={addOption}>
+                      <Icon name="plus" size={12} /> {t("newProduct.variants.addOption")}
+                    </button>
+                  </div>
                 </div>
+
+                {/* Таблиця згенерованих варіантів з inline-edit */}
                 <table className="tbl" style={{ marginTop: 14 }}>
                   <thead>
                     <tr>
@@ -452,11 +630,34 @@ export function NewProductPage() {
                       </tr>
                     )}
                     {variants.map((v) => (
-                      <tr key={v.id}>
+                      <tr key={v.key}>
                         <td>{v.name}</td>
-                        <td className="num">{formatMoney(v.price, activeShop.currency)}</td>
-                        <td className="num">{v.stock}</td>
-                        <td className="mono">{v.sku}</td>
+                        <td className="num">
+                          <input
+                            className="inline-edit num mono"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={v.price}
+                            onChange={(e) => editVariant(v.key, { price: e.target.value })}
+                          />
+                        </td>
+                        <td className="num">
+                          <input
+                            className="inline-edit num mono"
+                            type="number"
+                            min="0"
+                            value={v.stock}
+                            onChange={(e) => editVariant(v.key, { stock: Number(e.target.value) || 0 })}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            className="inline-edit mono"
+                            value={v.sku}
+                            onChange={(e) => editVariant(v.key, { sku: e.target.value.toUpperCase() })}
+                          />
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -615,6 +816,73 @@ function Row({ label, value }: { label: string; value: string }) {
     <div style={{ display: "flex", justifyContent: "space-between" }}>
       <span style={{ color: "var(--text-2)" }}>{label}</span>
       <span className="mono">{value}</span>
+    </div>
+  );
+}
+
+// Редактор однієї опції: ім'я + chip-values + кнопка видалення.
+function OptionRow({
+  option,
+  onRename,
+  onAddValue,
+  onRemoveValue,
+  onRemove,
+}: {
+  option: Option;
+  onRename: (name: string) => void;
+  onAddValue: (value: string) => void;
+  onRemoveValue: (value: string) => void;
+  onRemove: () => void;
+}) {
+  const [draft, setDraft] = useState("");
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "160px 1fr 28px", gap: 10, alignItems: "flex-start" }}>
+      <input
+        className="onb-input"
+        value={option.name}
+        onChange={(e) => onRename(e.target.value)}
+        style={{ padding: "6px 10px", fontSize: 13 }}
+      />
+      <div className="np-tags" style={{ minHeight: 36 }}>
+        {option.values.map((v) => (
+          <span key={v} className="np-tag">
+            {v}
+            <button type="button" onClick={() => onRemoveValue(v)} aria-label="remove">
+              ×
+            </button>
+          </span>
+        ))}
+        <input
+          className="np-tag-input"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === ",") {
+              e.preventDefault();
+              if (draft.trim()) {
+                onAddValue(draft);
+                setDraft("");
+              }
+            }
+          }}
+          onBlur={() => {
+            if (draft.trim()) {
+              onAddValue(draft);
+              setDraft("");
+            }
+          }}
+          placeholder="…"
+        />
+      </div>
+      <button
+        type="button"
+        className="btn ghost icon"
+        onClick={onRemove}
+        aria-label="remove option"
+        title="remove"
+      >
+        ×
+      </button>
     </div>
   );
 }

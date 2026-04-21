@@ -1,11 +1,17 @@
 from django.contrib import admin
 
-from .models import Product, ProductVariant
+from .models import Product, ProductImage, ProductVariant
 
 
 class ProductVariantInline(admin.TabularInline):
     model = ProductVariant
     extra = 0
+
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 0
+    fields = ("image", "position", "is_primary", "alt")
 
 
 @admin.register(Product)
@@ -24,7 +30,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("name", "sku", "barcode", "brand", "producer")
     autocomplete_fields = ("shop",)
     readonly_fields = ("created_at", "updated_at")
-    inlines = [ProductVariantInline]
+    inlines = [ProductImageInline, ProductVariantInline]
     fieldsets = (
         (
             "Основне",

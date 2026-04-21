@@ -56,3 +56,36 @@ export async function apiFetch<T = unknown>(path: string, options: RequestOption
 export async function ensureCsrf(): Promise<void> {
   await fetch(`${API_BASE}/auth/csrf/`, { credentials: "include" });
 }
+
+// Варіант apiFetch для multipart-загрузок (зображення, файли).
+// FormData сам виставляє Content-Type з boundary — тому ми його НЕ встановлюємо.
+export async function apiUpload<T = unknown>(
+  path: string,
+  formData: FormData,
+  options: { method?: "POST" | "PATCH" | "PUT"; shopSlug?: string | null } = {},
+): Promise<T> {
+  const method = options.method ?? "POST";
+  const headers = new Headers();
+  const csrf = getCookie("csrftoken");
+  if (csrf) headers.set("X-CSRFToken", csrf);
+  if (options.shopSlug) headers.set("X-Shop-Slug", options.shopSlug);
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method,
+    headers,
+    credentials: "include",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    let errBody: unknown = null;
+    try {
+      errBody = await res.json();
+    } catch {
+      /* ігноруємо */
+    }
+    throw new ApiError(res.status, errBody);
+  }
+  if (res.status === 204) return null as T;
+  return (await res.json()) as T;
+}

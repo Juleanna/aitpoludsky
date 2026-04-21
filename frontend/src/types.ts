@@ -45,6 +45,15 @@ export type ProductVariantInput = {
   position?: number;
 };
 
+export type ProductImage = {
+  id: number;
+  image: string; // абсолютний URL
+  position: number;
+  is_primary: boolean;
+  alt: string;
+  created_at: string;
+};
+
 export type Product = {
   id: number;
   sku: string;
@@ -71,9 +80,10 @@ export type Product = {
   url_slug: string;
   meta_title: string;
   meta_description: string;
-  // Канали і варіанти
+  // Канали, варіанти, медіа
   channels: ProductChannel[];
   variants: ProductVariant[];
+  images: ProductImage[];
   // Аудит
   created_at: string;
   updated_at: string;
