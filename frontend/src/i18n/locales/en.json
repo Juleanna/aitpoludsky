@@ -327,7 +327,10 @@
   },
   "newProduct": {
     "breadcrumb": "New",
+    "breadcrumbEdit": "Edit",
     "titleBefore": "New",
+    "titleBeforeEdit": "Edit",
+    "subtitleEdit": "Changes are saved with one click",
     "titleAccent": "product",
     "subtitle": "Add product to catalog · publish to chosen channels",
     "draft": "Draft",
@@ -378,7 +381,8 @@
       "primary": "main",
       "add": "Add",
       "uploadFailed": "upload failed",
-      "uploadPartial": "Failed to upload {{count}} image(s)"
+      "uploadPartial": "Failed to upload {{count}} image(s)",
+      "deleteConfirm": "Delete image? This cannot be undone."
     },
     "variants": {
       "hint": "Sizes, roast, grind — each variant has its own SKU and stock",

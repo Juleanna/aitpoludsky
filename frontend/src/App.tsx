@@ -79,6 +79,7 @@ export function App() {
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/catalog" element={<CatalogPage />} />
                 <Route path="/catalog/new" element={<NewProductPage />} />
+                <Route path="/catalog/:id/edit" element={<NewProductPage />} />
                 <Route path="/categories" element={<CategoriesPage />} />
                 <Route path="/customers" element={<CustomersPage />} />
                 <Route path="/discounts" element={<DiscountsPage />} />

@@ -327,6 +327,9 @@
   },
   "newProduct": {
     "breadcrumb": "Nowy",
+    "breadcrumbEdit": "Edycja",
+    "titleBeforeEdit": "Edytuj",
+    "subtitleEdit": "Zmiany zapisujemy jednym kliknięciem",
     "titleBefore": "Nowy",
     "titleAccent": "produkt",
     "subtitle": "Dodaj produkt do katalogu · opublikuj w wybranych kanałach",
@@ -378,7 +381,8 @@
       "primary": "główne",
       "add": "Dodaj",
       "uploadFailed": "nie udało się przesłać",
-      "uploadPartial": "Nie udało się przesłać {{count}} zdjęć"
+      "uploadPartial": "Nie udało się przesłać {{count}} zdjęć",
+      "deleteConfirm": "Usunąć zdjęcie? Nie można cofnąć."
     },
     "variants": {
       "hint": "Rozmiary, palenie, mielenie — każdy wariant ma własne SKU i stan",

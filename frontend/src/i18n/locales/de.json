@@ -327,6 +327,9 @@
   },
   "newProduct": {
     "breadcrumb": "Neu",
+    "breadcrumbEdit": "Bearbeiten",
+    "titleBeforeEdit": "Bearbeite",
+    "subtitleEdit": "Änderungen werden mit einem Klick gespeichert",
     "titleBefore": "Neues",
     "titleAccent": "Produkt",
     "subtitle": "Produkt zum Katalog hinzufügen · in Kanälen veröffentlichen",
@@ -378,7 +381,8 @@
       "primary": "Haupt",
       "add": "Hinzufügen",
       "uploadFailed": "Upload fehlgeschlagen",
-      "uploadPartial": "{{count}} Bild(er) konnten nicht hochgeladen werden"
+      "uploadPartial": "{{count}} Bild(er) konnten nicht hochgeladen werden",
+      "deleteConfirm": "Bild löschen? Kann nicht rückgängig gemacht werden."
     },
     "variants": {
       "hint": "Größen, Röstung, Mahlung — jede Variante hat eigene SKU und Bestand",

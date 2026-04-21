@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -6,18 +6,10 @@ import * as catalogApi from "@/api/catalog";
 import { useConfirm } from "@/components/ConfirmDialog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
-import type { Product, ProductChannel, ProductInput } from "@/types";
-import { formatMoney } from "@/utils/format";
+import type { Product, ProductInput } from "@/types";
 
-// Канали публікації — тепер справжні, зберігаються у Product.channels.
-const CHANNELS: { key: ProductChannel; emoji: string }[] = [
-  { key: "web", emoji: "🌐" },
-  { key: "ig", emoji: "📸" },
-  { key: "google", emoji: "🔍" },
-  { key: "pos", emoji: "💳" },
-];
-
-// Тон thumbnail за індексом у списку, щоб візуально відрізняти товари.
+// Тон thumbnail за індексом у списку, щоб візуально відрізняти товари,
+// коли у товара ще немає завантажених зображень.
 const toneFor = (index: number): string => String(((index % 8) + 1));
 
 export function CatalogPage() {
@@ -28,7 +20,6 @@ export function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const slug = activeShop?.slug ?? null;
 
@@ -46,8 +37,6 @@ export function CatalogPage() {
     try {
       const list = await catalogApi.listProducts(slug);
       setProducts(list);
-      // Обираємо перший товар для живого редактора, якщо нічого не вибрано.
-      setSelectedId((prev) => prev ?? list[0]?.id ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("common.error"));
     } finally {
@@ -68,7 +57,6 @@ export function CatalogPage() {
     });
     if (!ok) return;
     await catalogApi.deleteProduct(slug, id);
-    if (selectedId === id) setSelectedId(null);
     await reload();
   }
 
@@ -87,11 +75,6 @@ export function CatalogPage() {
       window.alert(t("catalog.saveError"));
     }
   }
-
-  const selected = useMemo(
-    () => products.find((p) => p.id === selectedId) ?? null,
-    [products, selectedId],
-  );
 
   if (!activeShop) {
     return (
@@ -138,21 +121,40 @@ export function CatalogPage() {
             </tr>
           </thead>
           <tbody>
-            {products.map((p, idx) => (
+            {products.map((p, idx) => {
+              const primaryImage = p.images?.find((i) => i.is_primary) ?? p.images?.[0];
+              return (
               <tr
                 key={p.id}
                 draggable
-                onClick={() => setSelectedId(p.id)}
-                style={{
-                  background: p.id === selectedId ? "var(--bg-sunken)" : undefined,
-                }}
+                onClick={() => navigate(`/catalog/${p.id}/edit`)}
+                style={{ cursor: "pointer" }}
               >
                 <td onClick={(e) => e.stopPropagation()}>
                   <Icon name="drag" size={14} className="drag-handle" />
                 </td>
                 <td>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div className="product-thumb-sm" data-tone={toneFor(idx)} />
+                    {primaryImage ? (
+                      <div
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "var(--r-sm)",
+                          overflow: "hidden",
+                          flexShrink: 0,
+                          background: "var(--bg-sunken)",
+                        }}
+                      >
+                        <img
+                          src={primaryImage.image}
+                          alt=""
+                          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="product-thumb-sm" data-tone={toneFor(idx)} />
+                    )}
                     <div>
                       <div style={{ fontWeight: 500 }}>{p.name}</div>
                       <div className="mono" style={{ fontSize: 11, color: "var(--text-3)" }}>
@@ -214,7 +216,8 @@ export function CatalogPage() {
                   </button>
                 </td>
               </tr>
-            ))}
+              );
+            })}
             {!loading && products.length === 0 && (
               <tr>
                 <td colSpan={6} style={{ textAlign: "center", color: "var(--text-3)", padding: 40 }}>
@@ -232,103 +235,6 @@ export function CatalogPage() {
           </tbody>
         </table>
       </div>
-
-      {/* Редактор товару з живим preview */}
-      {selected && (
-        <div className="card" style={{ marginTop: 24 }}>
-          <div className="card-head">
-            <h3 className="card-title">{t("catalog.editorTitle")}</h3>
-          </div>
-          <div style={{ padding: 20, display: "grid", gridTemplateColumns: "1fr 220px", gap: 28 }}>
-            <div>
-              <label className="onb-label">{t("catalog.name")}</label>
-              <input
-                className="onb-input"
-                key={`name-${selected.id}`}
-                defaultValue={selected.name}
-                onBlur={(e) => {
-                  if (e.target.value !== selected.name) void patchProduct(selected.id, { name: e.target.value });
-                }}
-              />
-              <label className="onb-label" style={{ marginTop: 14 }}>
-                {t("catalog.description")}
-              </label>
-              <textarea
-                className="onb-input"
-                key={`desc-${selected.id}`}
-                rows={3}
-                defaultValue={selected.description}
-                onBlur={(e) => {
-                  if (e.target.value !== selected.description)
-                    void patchProduct(selected.id, { description: e.target.value });
-                }}
-              />
-
-              <div className="publish-channels">
-                {CHANNELS.map((c) => {
-                  const current = selected.channels ?? [];
-                  const on = current.includes(c.key);
-                  return (
-                    <div
-                      key={c.key}
-                      className={`pub-channel ${on ? "active" : ""}`}
-                      onClick={() => {
-                        const next = on ? current.filter((k) => k !== c.key) : [...current, c.key];
-                        void patchProduct(selected.id, { channels: next });
-                      }}
-                    >
-                      {on && (
-                        <span className="check">
-                          <Icon name="check" size={12} />
-                        </span>
-                      )}
-                      <div className="pub-channel-emoji">{c.emoji}</div>
-                      <div className="pub-channel-label">{t(`catalog.channels.${c.key}`)}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Live preview картки товару */}
-            <div>
-              <div
-                className="mono"
-                style={{ fontSize: 10, color: "var(--text-3)", marginBottom: 6, letterSpacing: "0.08em" }}
-              >
-                {t("catalog.previewLabel")}
-              </div>
-              <div className="inline-preview">
-                <div
-                  className="product-thumb"
-                  data-tone={toneFor(products.findIndex((p) => p.id === selected.id))}
-                />
-                <div style={{ padding: 10 }}>
-                  <div style={{ fontSize: 11, color: "var(--text-3)" }}>
-                    {t("catalog.previewCategory").toUpperCase()}
-                  </div>
-                  <div style={{ fontSize: 13, fontWeight: 500, marginTop: 2 }}>{selected.name}</div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 4 }}>
-                    <span className="serif" style={{ fontSize: 18 }}>
-                      {formatMoney(selected.price, activeShop.currency)}
-                    </span>
-                    {selected.compare_at_price &&
-                      Number(selected.compare_at_price) > Number(selected.price) && (
-                        <span
-                          className="serif"
-                          style={{ fontSize: 13, color: "var(--text-3)", textDecoration: "line-through" }}
-                        >
-                          {formatMoney(selected.compare_at_price, activeShop.currency)}
-                        </span>
-                      )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }

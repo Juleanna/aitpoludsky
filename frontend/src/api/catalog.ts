@@ -27,6 +27,10 @@ export function createProduct(shopSlug: string, data: ProductInput) {
   return apiFetch<Product>("/catalog/products/", { method: "POST", body: data, shopSlug });
 }
 
+export function getProduct(shopSlug: string, id: number) {
+  return apiFetch<Product>(`/catalog/products/${id}/`, { shopSlug });
+}
+
 export function updateProduct(shopSlug: string, id: number, data: Partial<ProductInput>) {
   return apiFetch<Product>(`/catalog/products/${id}/`, { method: "PATCH", body: data, shopSlug });
 }

@@ -1,19 +1,27 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { ApiError } from "@/api/client";
 import * as catalogApi from "@/api/catalog";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
 import type {
   Category,
   ProductChannel,
+  ProductImage,
   ProductInput,
   ProductVariantInput,
   ProductVatStatus,
 } from "@/types";
 import { formatMoney } from "@/utils/format";
+
+// Слот медіа — один елемент у UI-гріді. Існуючі зображення вже на сервері
+// (kind=server, image.id), нові — локальні файли (kind=local, file+preview URL).
+type MediaSlot =
+  | { kind: "server"; image: ProductImage }
+  | { kind: "local"; file: File; previewUrl: string };
 
 // Повноекранна сторінка створення нового товару. Повторює розкладку прототипу:
 // основне / медіа / ціна та запас / варіанти / канали / SEO зліва + preview і
@@ -135,6 +143,12 @@ export function NewProductPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { activeShop } = useShops();
+  const { id: idParam } = useParams();
+  const editId = idParam ? Number(idParam) : null;
+  const editMode = editId !== null && !Number.isNaN(editId);
+  const ask = useConfirm();
+  // Поки вантажимо існуючий товар у edit-mode — показуємо заглушку.
+  const [loadingProduct, setLoadingProduct] = useState(editMode);
 
   // Основне
   const [name, setName] = useState("");
@@ -172,9 +186,12 @@ export function NewProductPage() {
   ]);
   const [variants, setVariants] = useState<Variant[]>([]);
 
-  // Медіа — File-обʼєкти перед uploadом. Реальне відправлення — після створення товару.
-  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
-  const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
+  // Медіа — єдиний упорядкований список слотів: серверні ProductImage
+  // (вже завантажені) + локальні File перед uploadом. Порядок = порядок
+  // у UI, primary = перший слот. Зберегти на сервер — через reorder+upload.
+  const [slots, setSlots] = useState<MediaSlot[]>([]);
+  // Початковий порядок серверних id-шників, щоб зрозуміти при save чи потрібен reorder.
+  const [initialServerIds, setInitialServerIds] = useState<number[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   // Стан drag-and-drop для перевпорядкування зображень.
   // dragIndex — що тягнемо; overIndex — куди ховер (для візуальної підсвітки).
@@ -267,32 +284,47 @@ export function NewProductPage() {
     setVariants((prev) => prev.map((v) => (v.key === key ? { ...v, ...patch } : v)));
   }
 
-  // ── Медіа: файли + previews ────────────────────────────
+  // ── Медіа: slots (серверні + локальні) ─────────────────
   function addFiles(files: FileList | File[]) {
     const newFiles = Array.from(files).filter((f) => f.type.startsWith("image/"));
     if (newFiles.length === 0) return;
-    const room = MAX_IMAGES - mediaFiles.length;
+    const room = MAX_IMAGES - slots.length;
     const toAdd = newFiles.slice(0, Math.max(0, room));
-    const newPreviews = toAdd.map((f) => URL.createObjectURL(f));
-    setMediaFiles((prev) => [...prev, ...toAdd]);
-    setMediaPreviews((prev) => [...prev, ...newPreviews]);
+    const newSlots: MediaSlot[] = toAdd.map((file) => ({
+      kind: "local",
+      file,
+      previewUrl: URL.createObjectURL(file),
+    }));
+    setSlots((prev) => [...prev, ...newSlots]);
   }
-  function removeFileAt(index: number) {
-    const url = mediaPreviews[index];
-    if (url) URL.revokeObjectURL(url);
-    setMediaFiles((prev) => prev.filter((_, i) => i !== index));
-    setMediaPreviews((prev) => prev.filter((_, i) => i !== index));
+  async function removeSlotAt(index: number) {
+    const slot = slots[index];
+    if (!slot) return;
+    if (slot.kind === "server" && activeShop) {
+      // Серверне зображення: видалення = негайний DELETE на бекенді.
+      // Підтверджуємо, бо дію неможливо відмінити без завантажень назад.
+      const ok = await ask({
+        title: t("newProduct.media.deleteConfirm"),
+        confirmLabel: t("common.delete"),
+        tone: "danger",
+      });
+      if (!ok) return;
+      try {
+        await catalogApi.deleteProductImage(activeShop.slug, editId!, slot.image.id);
+        setInitialServerIds((ids) => ids.filter((id) => id !== slot.image.id));
+      } catch {
+        // Якщо видалення провалилось — показуємо загальну помилку.
+        setError(t("common.error"));
+        return;
+      }
+    } else if (slot.kind === "local") {
+      URL.revokeObjectURL(slot.previewUrl);
+    }
+    setSlots((prev) => prev.filter((_, i) => i !== index));
   }
-  // Переставляє елемент із індексу from у target у двох паралельних масивах.
-  function moveFile(from: number, to: number) {
+  function moveSlot(from: number, to: number) {
     if (from === to) return;
-    setMediaFiles((prev) => {
-      const next = [...prev];
-      const [item] = next.splice(from, 1);
-      next.splice(to, 0, item);
-      return next;
-    });
-    setMediaPreviews((prev) => {
+    setSlots((prev) => {
       const next = [...prev];
       const [item] = next.splice(from, 1);
       next.splice(to, 0, item);
@@ -302,7 +334,9 @@ export function NewProductPage() {
   // Прибираємо object URLs при розмонтуванні.
   useEffect(() => {
     return () => {
-      mediaPreviews.forEach((u) => URL.revokeObjectURL(u));
+      slots.forEach((s) => {
+        if (s.kind === "local") URL.revokeObjectURL(s.previewUrl);
+      });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -329,7 +363,9 @@ export function NewProductPage() {
   }, [activeShop?.slug]);
 
   // Авто-підставляння SKU при зміні назви, поки користувач не редагував поле.
+  // У edit-mode вимкнене — не чіпаємо вже збережений SKU при redraw.
   useEffect(() => {
+    if (editMode) return;
     if (skuTouched) return;
     if (!name.trim()) {
       setSku("");
@@ -337,7 +373,70 @@ export function NewProductPage() {
     }
     setSku(generateUniqueSku(name, existingSkus));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name, existingSkus]);
+  }, [name, existingSkus, editMode]);
+
+  // Prefill у edit-mode: тягнемо product і розкладаємо по станах.
+  // ВАЖЛИВО: запускається лише коли є activeShop і коректний editId.
+  useEffect(() => {
+    if (!editMode || !activeShop || editId === null) return;
+    let cancelled = false;
+    setLoadingProduct(true);
+    void catalogApi
+      .getProduct(activeShop.slug, editId)
+      .then((p) => {
+        if (cancelled) return;
+        setName(p.name);
+        setDescription(p.description);
+        setCategory(p.category ?? null);
+        setBrand(p.brand);
+        setProducer(p.producer);
+        setTags(p.tags ?? []);
+        setPrice(p.price);
+        setCompareAt(p.compare_at_price ?? "");
+        setCost(p.cost ?? "");
+        setVat(p.vat_status);
+        setStock(String(p.stock));
+        setSku(p.sku);
+        setSkuTouched(true); // редагування SKU ручне, без автогенерації
+        setBarcode(p.barcode);
+        setWeight(p.weight_grams != null ? String(p.weight_grams) : "");
+        setUrlSlug(p.url_slug);
+        setMetaTitle(p.meta_title);
+        setMetaDesc(p.meta_description);
+        setChannels(new Set(p.channels ?? []));
+        if (p.variants && p.variants.length > 0) {
+          setHasVariants(true);
+          // Відображаємо сервер-варіанти як UI-варіанти. Ім'я-як-key (унікально
+          // для простого кейсу; для детального edit опцій/комбінацій — окреме UI).
+          setVariants(
+            p.variants.map((v) => ({
+              key: `srv-${v.id}`,
+              name: v.name,
+              price: v.price,
+              stock: v.stock,
+              sku: v.sku,
+            })),
+          );
+        }
+        const imgSlots: MediaSlot[] = (p.images ?? []).map((image) => ({
+          kind: "server" as const,
+          image,
+        }));
+        setSlots(imgSlots);
+        setInitialServerIds(imgSlots.map((s) => (s.kind === "server" ? s.image.id : 0)));
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setError(t("common.error"));
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingProduct(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editMode, activeShop?.slug, editId]);
 
   // Підвантажуємо категорії поточного магазину. При перемиканні магазину —
   // скидаємо вибраний id (щоб не лишився id з іншого магазину).
@@ -441,14 +540,35 @@ export function NewProductPage() {
         channels: Array.from(channels),
         variants: variantsPayload,
       };
-      const created = await catalogApi.createProduct(activeShop.slug, payload);
-      // Послідовно аплоадимо зображення, щоб зберегти порядок на сервері.
-      // Помилки окремих файлів не блокують перехід — збираємо у mediaErrors
-      // і показуємо пізніше (якщо треба — залишаємось на сторінці).
-      const failed: { name: string; message: string }[] = [];
-      for (const file of mediaFiles) {
+      // Create або update — залежно від режиму.
+      const saved = editMode
+        ? await catalogApi.updateProduct(activeShop.slug, editId!, payload)
+        : await catalogApi.createProduct(activeShop.slug, payload);
+
+      // ── Синхронізація медіа ─────────────────────────────
+      // 1) Перепорядкування серверних, якщо порядок у UI відрізняється від
+      //    початкового. (Нові локальні ще не завантажені — в reorder не беруть участь.)
+      const currentServerIds = slots
+        .filter((s): s is Extract<MediaSlot, { kind: "server" }> => s.kind === "server")
+        .map((s) => s.image.id);
+      const orderChanged =
+        currentServerIds.length === initialServerIds.length &&
+        currentServerIds.some((id, i) => id !== initialServerIds[i]);
+      if (orderChanged && currentServerIds.length > 0) {
         try {
-          await catalogApi.uploadProductImage(activeShop.slug, created.id, file);
+          await catalogApi.reorderProductImages(activeShop.slug, saved.id, currentServerIds);
+        } catch {
+          // Не критично — порядок не записався, але товар збережено.
+        }
+      }
+      // 2) Upload нових локальних файлів у порядку, у якому вони лежать у слотах.
+      const localFiles = slots.filter(
+        (s): s is Extract<MediaSlot, { kind: "local" }> => s.kind === "local",
+      );
+      const failed: { name: string; message: string }[] = [];
+      for (const slot of localFiles) {
+        try {
+          await catalogApi.uploadProductImage(activeShop.slug, saved.id, slot.file);
         } catch (uploadErr) {
           let msg = t("newProduct.media.uploadFailed");
           if (uploadErr instanceof ApiError) {
@@ -458,11 +578,11 @@ export function NewProductPage() {
               if (first) msg = Array.isArray(first) ? first[0] : String(first);
             }
           }
-          failed.push({ name: file.name, message: msg });
+          failed.push({ name: slot.file.name, message: msg });
         }
       }
       if (failed.length > 0) {
-        // Товар створений, але частина файлів не завантажилась — лишаємо
+        // Товар збережено, але частина файлів не завантажилась — лишаємо
         // користувача на сторінці, щоб міг повторити завантаження згодом.
         setMediaErrors(failed);
         setError(t("newProduct.media.uploadPartial", { count: failed.length }));
@@ -527,33 +647,57 @@ export function NewProductPage() {
           {t("nav.catalog")}
         </Link>
         <span style={{ color: "var(--text-3)" }}>/</span>
-        <span style={{ fontSize: 13, color: "var(--text)" }}>{t("newProduct.breadcrumb")}</span>
+        <span style={{ fontSize: 13, color: "var(--text)" }}>
+          {editMode ? t("newProduct.breadcrumbEdit") : t("newProduct.breadcrumb")}
+        </span>
       </div>
 
       <div className="page-head" style={{ paddingBottom: 20 }}>
         <div>
           <h1 className="page-title">
-            {t("newProduct.titleBefore")} <em>{t("newProduct.titleAccent")}</em>
+            {editMode ? (
+              <>
+                {t("newProduct.titleBeforeEdit")} <em>{t("newProduct.titleAccent")}</em>
+              </>
+            ) : (
+              <>
+                {t("newProduct.titleBefore")} <em>{t("newProduct.titleAccent")}</em>
+              </>
+            )}
           </h1>
-          <p className="page-sub">{t("newProduct.subtitle")}</p>
+          <p className="page-sub">
+            {editMode ? t("newProduct.subtitleEdit") : t("newProduct.subtitle")}
+          </p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <button type="button" className="btn ghost" onClick={() => navigate("/catalog")} disabled={busy}>
             {t("common.cancel")}
           </button>
-          <button type="button" className="btn" onClick={() => void save(false)} disabled={busy}>
-            {t("newProduct.draft")}
-          </button>
+          {!editMode && (
+            <button type="button" className="btn" onClick={() => void save(false)} disabled={busy}>
+              {t("newProduct.draft")}
+            </button>
+          )}
           <button
             type="button"
             className="btn accent"
             onClick={() => void save(true)}
             disabled={busy || !name || !sku}
           >
-            {busy ? t("common.saving") : t("newProduct.publish")}
+            {busy
+              ? t("common.saving")
+              : editMode
+                ? t("common.save")
+                : t("newProduct.publish")}
           </button>
         </div>
       </div>
+
+      {loadingProduct && (
+        <div className="card" style={{ padding: 24, textAlign: "center", color: "var(--text-3)" }}>
+          {t("common.loading")}
+        </div>
+      )}
 
       {error && (
         <div className="card" style={{ padding: 14, marginBottom: 16, color: "var(--err)" }}>
@@ -671,54 +815,58 @@ export function NewProductPage() {
               }}
             />
             <div className="np-media-grid">
-              {mediaPreviews.map((url, i) => (
-                <div
-                  key={url}
-                  className={`np-media-slot${dragIndex === i ? " dragging" : ""}${overIndex === i && dragIndex !== null && dragIndex !== i ? " drag-over" : ""}`}
-                  draggable
-                  onDragStart={(e) => {
-                    setDragIndex(i);
-                    e.dataTransfer.effectAllowed = "move";
-                    // Firefox не починає drag без setData.
-                    e.dataTransfer.setData("text/plain", String(i));
-                  }}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = "move";
-                    if (overIndex !== i) setOverIndex(i);
-                  }}
-                  onDragLeave={() => {
-                    if (overIndex === i) setOverIndex(null);
-                  }}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    if (dragIndex !== null) moveFile(dragIndex, i);
-                    setDragIndex(null);
-                    setOverIndex(null);
-                  }}
-                  onDragEnd={() => {
-                    setDragIndex(null);
-                    setOverIndex(null);
-                  }}
-                >
-                  {i === 0 && <span className="np-media-badge">{t("newProduct.media.primary")}</span>}
-                  <img
-                    src={url}
-                    alt=""
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    draggable={false}
-                  />
-                  <button
-                    type="button"
-                    className="np-media-remove"
-                    onClick={() => removeFileAt(i)}
-                    aria-label={t("common.delete")}
+              {slots.map((slot, i) => {
+                const url = slot.kind === "server" ? slot.image.image : slot.previewUrl;
+                const key = slot.kind === "server" ? `srv-${slot.image.id}` : slot.previewUrl;
+                return (
+                  <div
+                    key={key}
+                    className={`np-media-slot${dragIndex === i ? " dragging" : ""}${overIndex === i && dragIndex !== null && dragIndex !== i ? " drag-over" : ""}`}
+                    draggable
+                    onDragStart={(e) => {
+                      setDragIndex(i);
+                      e.dataTransfer.effectAllowed = "move";
+                      // Firefox не починає drag без setData.
+                      e.dataTransfer.setData("text/plain", String(i));
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = "move";
+                      if (overIndex !== i) setOverIndex(i);
+                    }}
+                    onDragLeave={() => {
+                      if (overIndex === i) setOverIndex(null);
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (dragIndex !== null) moveSlot(dragIndex, i);
+                      setDragIndex(null);
+                      setOverIndex(null);
+                    }}
+                    onDragEnd={() => {
+                      setDragIndex(null);
+                      setOverIndex(null);
+                    }}
                   >
-                    ×
-                  </button>
-                </div>
-              ))}
-              {mediaFiles.length < MAX_IMAGES && (
+                    {i === 0 && <span className="np-media-badge">{t("newProduct.media.primary")}</span>}
+                    <img
+                      src={url}
+                      alt=""
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      draggable={false}
+                    />
+                    <button
+                      type="button"
+                      className="np-media-remove"
+                      onClick={() => void removeSlotAt(i)}
+                      aria-label={t("common.delete")}
+                    >
+                      ×
+                    </button>
+                  </div>
+                );
+              })}
+              {slots.length < MAX_IMAGES && (
                 <button
                   type="button"
                   className="np-media-add"
@@ -1054,9 +1202,8 @@ export function NewProductPage() {
           <section className="np-card">
             <h3 className="np-section-title">{t("newProduct.preview.title")}</h3>
             <div className="inline-preview" style={{ maxWidth: "none", aspectRatio: "3/4" }}>
-              {/* Якщо користувач завантажив медіа — показуємо перше (головне)
-                  зображення замість нейтрального плейсхолдера. */}
-              {mediaPreviews.length > 0 ? (
+              {/* Якщо є медіа — показуємо перший слот (сервер або локальний файл). */}
+              {slots.length > 0 ? (
                 <div
                   style={{
                     aspectRatio: "1",
@@ -1066,7 +1213,7 @@ export function NewProductPage() {
                   }}
                 >
                   <img
-                    src={mediaPreviews[0]}
+                    src={slots[0].kind === "server" ? slots[0].image.image : slots[0].previewUrl}
                     alt=""
                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                   />
