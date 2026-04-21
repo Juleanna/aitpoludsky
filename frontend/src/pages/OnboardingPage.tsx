@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,27 @@ import * as catalogApi from "@/api/catalog";
 import * as shopsApi from "@/api/shops";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
+
+// Транслітерація укр/рос → lat для генерації slug з назви магазину.
+const SLUG_TRANSLIT: Record<string, string> = {
+  а: "a", б: "b", в: "v", г: "h", ґ: "g", д: "d", е: "e", є: "ie", ж: "zh",
+  з: "z", и: "y", і: "i", ї: "i", й: "i", к: "k", л: "l", м: "m", н: "n",
+  о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "kh", ц: "ts",
+  ч: "ch", ш: "sh", щ: "shch", ь: "", ю: "iu", я: "ia", ы: "y", э: "e", ъ: "",
+  "'": "", "ʼ": "", "`": "",
+};
+
+function slugify(raw: string): string {
+  const transliterated = raw
+    .toLowerCase()
+    .split("")
+    .map((ch) => (SLUG_TRANSLIT[ch] !== undefined ? SLUG_TRANSLIT[ch] : ch))
+    .join("");
+  return transliterated
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+}
 
 // 5-кроковий onboarding wizard (крок → заповнення → Далі).
 // 1-й крок створює магазин реальним POST /api/shops/, 2-й — перший товар.
@@ -36,8 +57,74 @@ export function OnboardingPage() {
   // Крок 1: магазин
   const [shopName, setShopName] = useState("");
   const [shopSlug, setShopSlug] = useState("");
+  // slugTouched — користувач редагував поле вручну. Поки false,
+  // авто-підставляємо slug із назви магазину.
+  const [slugTouched, setSlugTouched] = useState(false);
+  // Стан перевірки домену: idle (не перевірено), checking (запит летить),
+  // available / taken / reserved / format (результат).
+  const [slugStatus, setSlugStatus] = useState<
+    "idle" | "checking" | "available" | "taken" | "reserved" | "format"
+  >("idle");
   const [category, setCategory] = useState<Category>("coffee");
   const [createdShopSlug, setCreatedShopSlug] = useState<string | null>(null);
+
+  // Авто-підставляння slug із назви магазину, поки користувач не чіпав поле.
+  useEffect(() => {
+    if (slugTouched) return;
+    setShopSlug(slugify(shopName));
+  }, [shopName, slugTouched]);
+
+  // Debounced-перевірка доступності slug. Летить після 400мс тиші.
+  useEffect(() => {
+    const slug = shopSlug.trim();
+    if (!slug) {
+      setSlugStatus("idle");
+      return;
+    }
+    if (slug.length < 2) {
+      setSlugStatus("format");
+      return;
+    }
+    setSlugStatus("checking");
+    const timer = setTimeout(async () => {
+      try {
+        const result = await shopsApi.checkShopSlug(slug);
+        // Ігноруємо застарілу відповідь, якщо значення вже змінилось.
+        if (result.slug !== slug.toLowerCase()) return;
+        if (result.available) setSlugStatus("available");
+        else if (result.reason === "reserved") setSlugStatus("reserved");
+        else if (result.reason === "format") setSlugStatus("format");
+        else setSlugStatus("taken");
+      } catch {
+        setSlugStatus("idle");
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [shopSlug]);
+
+  // Генерація slug з назви + ретраї з числовим суфіксом, якщо зайнятий.
+  async function regenerateSlug() {
+    const base = slugify(shopName) || "shop";
+    const candidates = [base, ...Array.from({ length: 8 }, (_, i) => `${base}-${i + 2}`)];
+    setSlugStatus("checking");
+    for (const candidate of candidates) {
+      try {
+        const result = await shopsApi.checkShopSlug(candidate);
+        if (result.available) {
+          setShopSlug(candidate);
+          setSlugTouched(true);
+          setSlugStatus("available");
+          return;
+        }
+      } catch {
+        // Продовжуємо пробувати наступного кандидата.
+      }
+    }
+    // Fallback: base + timestamp-шматок.
+    const fallback = `${base}-${Date.now().toString(36).slice(-4)}`;
+    setShopSlug(fallback);
+    setSlugTouched(true);
+  }
 
   // Крок 2: перший товар
   const [productName, setProductName] = useState("");
@@ -183,15 +270,49 @@ export function OnboardingPage() {
               />
             </Field>
             <Field label={t("onboarding.shop.domain")}>
-              <div className="onb-input-with-suffix">
-                <input
-                  value={shopSlug}
-                  required
-                  pattern="[a-z0-9-]+"
-                  onChange={(e) => setShopSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
-                  placeholder="my-shop"
-                />
-                <span>.aitpoludsky.shop</span>
+              <div style={{ display: "flex", gap: 6, alignItems: "stretch" }}>
+                <div className="onb-input-with-suffix" style={{ flex: 1, minWidth: 0 }}>
+                  <input
+                    value={shopSlug}
+                    required
+                    pattern="[a-z0-9-]+"
+                    onChange={(e) => {
+                      setShopSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""));
+                      setSlugTouched(true);
+                    }}
+                    placeholder="my-shop"
+                  />
+                  <span>.aitpoludsky.shop</span>
+                </div>
+                <button
+                  type="button"
+                  className="btn ghost icon"
+                  onClick={() => void regenerateSlug()}
+                  disabled={!shopName.trim()}
+                  aria-label={t("onboarding.shop.domainGenerate")}
+                  title={t("onboarding.shop.domainGenerate")}
+                >
+                  <Icon name="sparkle" size={14} />
+                </button>
+              </div>
+              <div
+                style={{
+                  fontSize: 11,
+                  marginTop: 4,
+                  color:
+                    slugStatus === "available"
+                      ? "var(--ok, #3a7a3a)"
+                      : slugStatus === "taken" || slugStatus === "reserved" || slugStatus === "format"
+                        ? "var(--err)"
+                        : "var(--text-3)",
+                }}
+              >
+                {slugStatus === "checking" && t("onboarding.shop.domainChecking")}
+                {slugStatus === "available" && `✓ ${t("onboarding.shop.domainAvailable")}`}
+                {slugStatus === "taken" && `✗ ${t("onboarding.shop.domainTaken")}`}
+                {slugStatus === "reserved" && `✗ ${t("onboarding.shop.domainReserved")}`}
+                {slugStatus === "format" && t("onboarding.shop.domainFormat")}
+                {slugStatus === "idle" && t("onboarding.shop.domainHint")}
               </div>
             </Field>
             <Field label={t("onboarding.shop.category")} colSpan={2}>
@@ -348,7 +469,16 @@ export function OnboardingPage() {
               type="button"
               className="btn accent"
               onClick={goNext}
-              disabled={busy || (step === 1 && (!shopName || !shopSlug))}
+              disabled={
+                busy ||
+                (step === 1 &&
+                  (!shopName ||
+                    !shopSlug ||
+                    slugStatus === "taken" ||
+                    slugStatus === "reserved" ||
+                    slugStatus === "format" ||
+                    slugStatus === "checking"))
+              }
             >
               {busy ? "…" : t("common.next")} <Icon name="arrow_right" size={14} />
             </button>

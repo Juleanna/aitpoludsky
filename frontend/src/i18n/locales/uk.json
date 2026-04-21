@@ -118,6 +118,13 @@
       "name": "Назва магазину",
       "namePlaceholder": "Моя кавʼярня",
       "domain": "Домен",
+      "domainHint": "Латиниця, цифри та дефіс",
+      "domainChecking": "Перевіряємо доступність…",
+      "domainAvailable": "Вільний",
+      "domainTaken": "Зайнятий — оберіть інший",
+      "domainReserved": "Цей домен зарезервовано",
+      "domainFormat": "Мінімум 2 символи: латиниця, цифри, дефіс",
+      "domainGenerate": "Згенерувати з назви",
       "category": "Чим торгуєте?"
     },
     "product": {

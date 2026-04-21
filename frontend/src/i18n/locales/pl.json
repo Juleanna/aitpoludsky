@@ -118,6 +118,13 @@
       "name": "Nazwa sklepu",
       "namePlaceholder": "Moja kawiarnia",
       "domain": "Domena",
+      "domainHint": "Małe litery, cyfry i myślnik",
+      "domainChecking": "Sprawdzamy dostępność…",
+      "domainAvailable": "Dostępna",
+      "domainTaken": "Zajęta — wybierz inną",
+      "domainReserved": "Ta nazwa jest zarezerwowana",
+      "domainFormat": "Min. 2 znaki: litery, cyfry, myślnik",
+      "domainGenerate": "Wygeneruj z nazwy",
       "category": "Co sprzedajesz?"
     },
     "product": {

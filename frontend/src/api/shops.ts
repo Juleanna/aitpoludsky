@@ -20,3 +20,15 @@ export function createShop(data: CreateShopInput) {
 export function getShop(slug: string) {
   return apiFetch<Shop>(`/shops/${slug}/`);
 }
+
+export type SlugCheckResult = {
+  slug: string;
+  available: boolean;
+  reason: "format" | "reserved" | "taken" | null;
+};
+
+export function checkShopSlug(slug: string) {
+  return apiFetch<SlugCheckResult>(
+    `/shops/check-slug/?slug=${encodeURIComponent(slug)}`,
+  );
+}

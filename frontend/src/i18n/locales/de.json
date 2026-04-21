@@ -118,6 +118,13 @@
       "name": "Shop-Name",
       "namePlaceholder": "Mein Café",
       "domain": "Domain",
+      "domainHint": "Kleinbuchstaben, Ziffern und Bindestrich",
+      "domainChecking": "Verfügbarkeit wird geprüft…",
+      "domainAvailable": "Verfügbar",
+      "domainTaken": "Bereits vergeben — anderen wählen",
+      "domainReserved": "Dieser Name ist reserviert",
+      "domainFormat": "Mind. 2 Zeichen: Buchstaben, Ziffern, Bindestrich",
+      "domainGenerate": "Aus Name generieren",
       "category": "Was verkaufen Sie?"
     },
     "product": {
