@@ -231,6 +231,12 @@
 .onb-input-with-suffix input { flex: 1; padding: 10px 14px; border: none; background: transparent; font-size: 14px; color: var(--text); }
 .onb-input-with-suffix input:focus { outline: none; }
 .onb-input-with-suffix span { font-size: 13px; color: var(--text-3); font-family: var(--font-mono); }
+/* Стан валідаційної помилки для поля форми (обгортка .has-error). */
+.has-error .onb-input,
+.has-error .onb-input-with-suffix { border-color: var(--err); }
+.has-error .onb-input:focus { box-shadow: 0 0 0 3px oklch(0.58 0.18 25 / 0.18); border-color: var(--err); }
+.onb-label .req { color: var(--err); margin-left: 3px; }
+.field-err { font-size: 11px; color: var(--err); margin-top: 4px; }
 
 /* Command Palette */
 .cmdk-backdrop { position: fixed; inset: 0; background: oklch(0 0 0 / 0.35); backdrop-filter: blur(8px); z-index: 200; display: flex; justify-content: center; padding-top: 12vh; animation: fade 0.15s; }

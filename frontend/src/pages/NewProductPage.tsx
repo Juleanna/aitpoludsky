@@ -191,6 +191,18 @@ export function NewProductPage() {
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Помилки per-field: ключ — назва поля payload (name/sku/price/…),
+  // значення — текст повідомлення. Чистяться при зміні конкретного поля.
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  function clearFieldErr(field: string) {
+    setFieldErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  }
 
   function addTag() {
     const v = tagDraft.trim().toLowerCase();
@@ -370,8 +382,30 @@ export function NewProductPage() {
 
   async function save(activate: boolean) {
     if (!activeShop) return;
+
+    // ── Клієнтська валідація перед відправкою ─────────────────
+    // Зупиняє запит, якщо очевидно обов'язкові поля пусті або некоректні.
+    // Бекенд має свою валідацію, але краще показати помилки одразу.
+    const errs: Record<string, string> = {};
+    if (!name.trim()) errs.name = t("newProduct.errors.required");
+    if (!sku.trim()) errs.sku = t("newProduct.errors.required");
+    const priceNum = Number(price);
+    if (!price || Number.isNaN(priceNum) || priceNum <= 0) {
+      errs.price = t("newProduct.errors.priceInvalid");
+    }
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
+      setError(t("newProduct.errors.fixFields"));
+      // Прокручуємо до першого поля з помилкою (плавно).
+      requestAnimationFrame(() => {
+        document.querySelector(".has-error")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+      return;
+    }
+
     setBusy(true);
     setError(null);
+    setFieldErrors({});
     try {
       const variantsPayload: ProductVariantInput[] = hasVariants
         ? variants.map((v, i) => ({
@@ -418,9 +452,18 @@ export function NewProductPage() {
     } catch (err) {
       if (err instanceof ApiError) {
         const body = err.body as Record<string, string[] | string> | null;
-        if (body) {
-          const first = Object.values(body)[0];
-          setError(Array.isArray(first) ? first[0] : String(first));
+        if (body && typeof body === "object") {
+          // Розкладаємо помилки бекенду по полях (key == назва поля payload).
+          const mapped: Record<string, string> = {};
+          for (const [key, value] of Object.entries(body)) {
+            const msg = Array.isArray(value) ? value[0] : String(value);
+            mapped[key] = msg;
+          }
+          setFieldErrors(mapped);
+          setError(t("newProduct.errors.fixFields"));
+          requestAnimationFrame(() => {
+            document.querySelector(".has-error")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          });
         } else {
           setError(t("common.error"));
         }
@@ -510,12 +553,15 @@ export function NewProductPage() {
           {/* Основне */}
           <section className="np-card">
             <h3 className="np-section-title">{t("newProduct.sections.basic")}</h3>
-            <Field label={t("newProduct.fields.name")}>
+            <Field label={t("newProduct.fields.name")} required error={fieldErrors.name}>
               <input
                 className="onb-input"
                 value={name}
                 required
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  clearFieldErr("name");
+                }}
               />
             </Field>
             <Field label={t("newProduct.fields.description")}>
@@ -669,7 +715,7 @@ export function NewProductPage() {
           <section className="np-card">
             <h3 className="np-section-title">{t("newProduct.sections.pricing")}</h3>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
-              <Field label={t("newProduct.fields.price")}>
+              <Field label={t("newProduct.fields.price")} required error={fieldErrors.price}>
                 <input
                   className="onb-input mono"
                   type="number"
@@ -677,7 +723,10 @@ export function NewProductPage() {
                   min="0"
                   value={price}
                   required
-                  onChange={(e) => setPrice(e.target.value)}
+                  onChange={(e) => {
+                    setPrice(e.target.value);
+                    clearFieldErr("price");
+                  }}
                 />
               </Field>
               <Field label={t("newProduct.fields.compareAt")} hint={t("newProduct.fields.compareAtHint")}>
@@ -727,6 +776,8 @@ export function NewProductPage() {
               </Field>
               <Field
                 label={t("newProduct.fields.sku")}
+                required
+                error={fieldErrors.sku}
                 hint={
                   sku && existingSkus.has(sku)
                     ? t("newProduct.fields.skuTaken")
@@ -743,6 +794,7 @@ export function NewProductPage() {
                     onChange={(e) => {
                       setSku(e.target.value.toUpperCase());
                       setSkuTouched(true);
+                      clearFieldErr("sku");
                     }}
                     style={{ flex: 1, minWidth: 0 }}
                   />
@@ -1027,17 +1079,30 @@ export function NewProductPage() {
 function Field({
   label,
   hint,
+  required,
+  error,
   children,
 }: {
   label: string;
   hint?: string;
+  required?: boolean;
+  error?: string;
   children: React.ReactNode;
 }) {
+  // Клас .has-error застосовує червону рамку до вкладених .onb-input.
+  // error має пріоритет над hint — одночасно не показуємо обидва.
   return (
-    <div style={{ marginBottom: 12 }}>
-      <label className="onb-label">{label}</label>
+    <div className={error ? "has-error" : undefined} style={{ marginBottom: 12 }}>
+      <label className="onb-label">
+        {label}
+        {required && <span className="req" aria-hidden>*</span>}
+      </label>
       {children}
-      {hint && <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 4 }}>{hint}</div>}
+      {error ? (
+        <div className="field-err">{error}</div>
+      ) : (
+        hint && <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 4 }}>{hint}</div>
+      )}
     </div>
   );
 }

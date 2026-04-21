@@ -325,6 +325,11 @@
     "subtitle": "Dodaj produkt do katalogu · opublikuj w wybranych kanałach",
     "draft": "Szkic",
     "publish": "Opublikuj",
+    "errors": {
+      "required": "To pole jest wymagane.",
+      "priceInvalid": "Cena musi być większa od 0.",
+      "fixFields": "Popraw pola zaznaczone na czerwono."
+    },
     "sections": {
       "basic": "Podstawowe",
       "media": "Media",

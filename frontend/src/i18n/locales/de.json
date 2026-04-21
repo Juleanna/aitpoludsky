@@ -325,6 +325,11 @@
     "subtitle": "Produkt zum Katalog hinzufügen · in Kanälen veröffentlichen",
     "draft": "Entwurf",
     "publish": "Veröffentlichen",
+    "errors": {
+      "required": "Dieses Feld ist erforderlich.",
+      "priceInvalid": "Preis muss größer als 0 sein.",
+      "fixFields": "Bitte rot markierte Felder prüfen."
+    },
     "sections": {
       "basic": "Basis",
       "media": "Medien",

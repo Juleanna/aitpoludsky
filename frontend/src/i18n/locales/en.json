@@ -325,6 +325,11 @@
     "subtitle": "Add product to catalog · publish to chosen channels",
     "draft": "Draft",
     "publish": "Publish",
+    "errors": {
+      "required": "This field is required.",
+      "priceInvalid": "Price must be greater than 0.",
+      "fixFields": "Please fix the fields highlighted in red."
+    },
     "sections": {
       "basic": "Basics",
       "media": "Media",
