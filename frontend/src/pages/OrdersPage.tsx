@@ -33,6 +33,13 @@ export function OrdersPage() {
 
   const slug = activeShop?.slug ?? null;
 
+  // Глобальна подія ait:new-order (від хоткея N→O) — відкриває drawer нового замовлення.
+  useEffect(() => {
+    const handler = () => setEditing("new");
+    window.addEventListener("ait:new-order", handler);
+    return () => window.removeEventListener("ait:new-order", handler);
+  }, []);
+
   const reload = useCallback(async () => {
     if (!slug) return;
     setLoading(true);

@@ -8,10 +8,13 @@ import { UI_LANGUAGES } from "@/i18n";
 import { useAuth } from "@/context/AuthContext";
 import { useShops } from "@/context/ShopContext";
 import { useTweaks } from "@/context/TweaksContext";
+import { useGlobalHotkeys } from "@/hooks/useGlobalHotkeys";
 import { Brand } from "./Brand";
+import { CommandPalette } from "./CommandPalette";
 import { Icon } from "./Icon";
 import { MariaAssistant } from "./MariaAssistant";
 import { QuickScreens } from "./QuickScreens";
+import { ShortcutsModal } from "./ShortcutsModal";
 
 // Схема меню: секції з заголовками + пункти з іконками та опційними лічильниками.
 type NavItem = {
@@ -113,6 +116,14 @@ export function Shell() {
 
   const [counts, setCounts] = useState<SidebarCounts>({ orders: 0, catalog: 0, inbox: 0, locations: 0 });
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  // Глобальні оверлеї — керуються з хоткеїв і з кнопки клавіатури в топбарі.
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [cmdKOpen, setCmdKOpen] = useState(false);
+
+  useGlobalHotkeys({
+    openCommandPalette: () => setCmdKOpen(true),
+    openShortcuts: () => setShortcutsOpen(true),
+  });
   // Згорнутий sidebar — тепер частина глобальних Tweaks (TweaksContext),
   // щоб Tweaks-панель могла його перемикати.
   const { tweaks, update } = useTweaks();
@@ -316,17 +327,18 @@ export function Shell() {
           </div>
 
           <div className="topbar-actions">
-            <div className="search" role="button" tabIndex={0}>
+            <div className="search" role="button" tabIndex={0} onClick={() => setCmdKOpen(true)}>
               <Icon name="search" size={14} />
               <span>{t("topbar.searchPlaceholder")}</span>
               <span className="kbd">⌘K</span>
             </div>
 
-            {/* Клавіатурні скорочення — поки placeholder */}
+            {/* Клавіатурні скорочення — відкриває модал довідки */}
             <button
               className="topbar-icon-btn"
               aria-label={t("topbar.shortcuts")}
               title={t("topbar.shortcuts")}
+              onClick={() => setShortcutsOpen(true)}
             >
               <Icon name="keyboard" size={16} />
             </button>
@@ -350,6 +362,9 @@ export function Shell() {
         <QuickScreens />
 
         <Outlet />
+
+        <ShortcutsModal open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
+        <CommandPalette open={cmdKOpen} onClose={() => setCmdKOpen(false)} />
       </div>
     </div>
   );

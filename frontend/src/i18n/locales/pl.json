@@ -430,6 +430,28 @@
     "notifications": "Powiadomienia",
     "quickScreens": "Szybkie ekrany"
   },
+  "shortcuts": {
+    "title": "Skróty klawiaturowe",
+    "sections": { "navigation": "Nawigacja", "actions": "Akcje" },
+    "nav": {
+      "commandPalette": "Paleta poleceń",
+      "dashboard": "Panel",
+      "orders": "Zamówienia",
+      "catalog": "Katalog",
+      "customers": "Klienci"
+    },
+    "actions": {
+      "newProduct": "Nowy produkt",
+      "newOrder": "Nowe zamówienie",
+      "openMaria": "Otwórz Marię",
+      "toggleTheme": "Ciemny motyw",
+      "thisHelp": "Ta pomoc"
+    }
+  },
+  "commandPalette": {
+    "placeholder": "Przejdź do…",
+    "empty": "Nic nie znaleziono"
+  },
   "seasonalBanner": {
     "spring": {
       "title": "Kampania wiosenna trwa",

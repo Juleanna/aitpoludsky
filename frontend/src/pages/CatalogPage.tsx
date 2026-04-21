@@ -33,6 +33,13 @@ export function CatalogPage() {
 
   const slug = activeShop?.slug ?? null;
 
+  // Глобальна подія ait:new-product (від хоткея N→P) — відкриває drawer нового товару.
+  useEffect(() => {
+    const handler = () => setForm(emptyForm());
+    window.addEventListener("ait:new-product", handler);
+    return () => window.removeEventListener("ait:new-product", handler);
+  }, []);
+
   const reload = useCallback(async () => {
     if (!slug) return;
     setLoading(true);

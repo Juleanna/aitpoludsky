@@ -23,6 +23,13 @@ export function MariaAssistant() {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, open]);
 
+  // Глобальна подія ait:toggle-maria (надсилається з хоткея ⌘/).
+  useEffect(() => {
+    const handler = () => setOpen((o) => !o);
+    window.addEventListener("ait:toggle-maria", handler);
+    return () => window.removeEventListener("ait:toggle-maria", handler);
+  }, []);
+
   // Якщо мова змінилась — оновлюємо початкове welcome-повідомлення.
   useEffect(() => {
     setMessages((prev) => {

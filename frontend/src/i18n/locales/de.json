@@ -430,6 +430,28 @@
     "notifications": "Benachrichtigungen",
     "quickScreens": "Schnelle Bildschirme"
   },
+  "shortcuts": {
+    "title": "Tastenkürzel",
+    "sections": { "navigation": "Navigation", "actions": "Aktionen" },
+    "nav": {
+      "commandPalette": "Befehlspalette",
+      "dashboard": "Übersicht",
+      "orders": "Bestellungen",
+      "catalog": "Katalog",
+      "customers": "Kunden"
+    },
+    "actions": {
+      "newProduct": "Neues Produkt",
+      "newOrder": "Neue Bestellung",
+      "openMaria": "Maria öffnen",
+      "toggleTheme": "Dunkles Theme",
+      "thisHelp": "Diese Hilfe"
+    }
+  },
+  "commandPalette": {
+    "placeholder": "Springen zu…",
+    "empty": "Nichts gefunden"
+  },
   "seasonalBanner": {
     "spring": {
       "title": "Frühlingskampagne aktiv",

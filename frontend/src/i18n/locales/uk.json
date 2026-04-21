@@ -430,6 +430,28 @@
     "notifications": "Сповіщення",
     "quickScreens": "Швидкі екрани"
   },
+  "shortcuts": {
+    "title": "Клавіатурні скорочення",
+    "sections": { "navigation": "Навігація", "actions": "Дії" },
+    "nav": {
+      "commandPalette": "Командна панель",
+      "dashboard": "Дашборд",
+      "orders": "Замовлення",
+      "catalog": "Каталог",
+      "customers": "Клієнти"
+    },
+    "actions": {
+      "newProduct": "Новий товар",
+      "newOrder": "Нове замовлення",
+      "openMaria": "Відкрити Марію",
+      "toggleTheme": "Темна тема",
+      "thisHelp": "Ця довідка"
+    }
+  },
+  "commandPalette": {
+    "placeholder": "Перейти до…",
+    "empty": "Нічого не знайдено"
+  },
   "seasonalBanner": {
     "spring": {
       "title": "Весняна кампанія активна",

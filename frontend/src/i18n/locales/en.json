@@ -430,6 +430,28 @@
     "notifications": "Notifications",
     "quickScreens": "Quick screens"
   },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "sections": { "navigation": "Navigation", "actions": "Actions" },
+    "nav": {
+      "commandPalette": "Command palette",
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "catalog": "Catalog",
+      "customers": "Customers"
+    },
+    "actions": {
+      "newProduct": "New product",
+      "newOrder": "New order",
+      "openMaria": "Open Maria",
+      "toggleTheme": "Dark theme",
+      "thisHelp": "This help"
+    }
+  },
+  "commandPalette": {
+    "placeholder": "Jump to…",
+    "empty": "Nothing found"
+  },
   "seasonalBanner": {
     "spring": {
       "title": "Spring campaign is live",
