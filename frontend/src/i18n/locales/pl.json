@@ -430,6 +430,24 @@
     "notifications": "Powiadomienia",
     "quickScreens": "Szybkie ekrany"
   },
+  "seasonalBanner": {
+    "spring": {
+      "title": "Kampania wiosenna trwa",
+      "desc": "-15% na wybrane kategorie do 30 kwietnia"
+    },
+    "summer": {
+      "title": "Tryb letni",
+      "desc": "Orzeźwiające oferty na upalne dni"
+    },
+    "christmas": {
+      "title": "Promocja świąteczna",
+      "desc": "Zestawy prezentowe i świąteczny wystrój"
+    },
+    "blackFriday": {
+      "title": "Black Friday",
+      "desc": "Największe rabaty roku — ograniczony czas"
+    }
+  },
   "tweaks": {
     "openLabel": "Ustawienia interfejsu",
     "reset": "Reset",

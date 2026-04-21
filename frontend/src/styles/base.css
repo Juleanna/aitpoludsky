@@ -234,6 +234,16 @@ input, select, textarea { font-family: inherit; color: inherit; }
 .tbl tr:hover td { background: var(--bg-sunken); cursor: pointer; }
 .tbl .num { font-family: var(--font-mono); text-align: right; font-variant-numeric: tabular-nums; }
 
+/* Сезонний банер на дашборді (реагує на tweaks.seasonal) */
+.seasonal-banner { background: linear-gradient(90deg, var(--accent-soft), var(--bg-elev)); border: 1px solid var(--accent-line); border-radius: var(--r-md); padding: 12px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.seasonal-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+.seasonal-banner[data-season='summer'] { background: linear-gradient(90deg, oklch(0.94 0.06 90), var(--bg-elev)); border-color: oklch(0.82 0.1 90); }
+.seasonal-banner[data-season='christmas'] { background: linear-gradient(90deg, oklch(0.94 0.05 25), var(--bg-elev)); border-color: oklch(0.82 0.08 25); }
+.seasonal-banner[data-season='blackFriday'] { background: linear-gradient(90deg, oklch(0.22 0.01 60), oklch(0.3 0.02 60)); border-color: oklch(0.4 0.02 60); color: oklch(0.95 0 0); }
+.seasonal-banner[data-season='blackFriday'] .seasonal-dot { background: oklch(0.75 0.14 75); }
+.seasonal-banner[data-season='blackFriday'] span { color: oklch(0.75 0.01 60) !important; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
 /* Плаваюча кнопка-тригер Tweaks у правому нижньому куті */
 .tweaks-trigger { position: fixed; right: 20px; bottom: 20px; z-index: 95; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--bg-elev); color: var(--text); font-size: 12px; font-weight: 500; box-shadow: var(--shadow-md); cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; }
 .tweaks-trigger:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }

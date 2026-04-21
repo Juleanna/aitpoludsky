@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import * as dashboardApi from "@/api/dashboard";
 import { Icon } from "@/components/Icon";
+import { SeasonalBanner } from "@/components/SeasonalBanner";
 import { Sparkline } from "@/components/Sparkline";
 import { StatCard } from "@/components/StatCard";
 import { useAuth } from "@/context/AuthContext";
@@ -73,6 +74,7 @@ export function DashboardPage() {
 
   return (
     <div className="content">
+      <SeasonalBanner />
       <div className="page-head">
         <div>
           <h1 className="page-title">{t("dashboard.greeting", { name })}</h1>

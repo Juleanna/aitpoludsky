@@ -430,6 +430,24 @@
     "notifications": "Notifications",
     "quickScreens": "Quick screens"
   },
+  "seasonalBanner": {
+    "spring": {
+      "title": "Spring campaign is live",
+      "desc": "-15% on selected categories until April 30"
+    },
+    "summer": {
+      "title": "Summer mode",
+      "desc": "Cool offers for hot days"
+    },
+    "christmas": {
+      "title": "Christmas promo",
+      "desc": "Gift bundles and festive decor"
+    },
+    "blackFriday": {
+      "title": "Black Friday",
+      "desc": "Year's biggest discounts — limited time"
+    }
+  },
   "tweaks": {
     "openLabel": "Interface settings",
     "reset": "Reset",
