@@ -99,6 +99,30 @@
 .product-thumb-sm[data-tone="8"] { background-color: oklch(0.9 0.04 170); }
 .product-info { padding: 14px; }
 
+/* ── Drag handle у таблиці товарів ────────────────────── */
+.drag-handle { opacity: 0.35; cursor: grab; color: var(--text-3); }
+.tbl tr:hover .drag-handle { opacity: 1; }
+.drag-handle:active { cursor: grabbing; }
+
+/* ── Inline-редагування у клітинках таблиці ──────────── */
+.inline-edit { border: none; background: transparent; font: inherit; color: inherit; padding: 4px 8px; border-radius: 4px; width: 100%; text-align: inherit; }
+.inline-edit:hover { background: var(--bg-tint); }
+.inline-edit:focus { outline: none; background: var(--bg); box-shadow: 0 0 0 2px var(--accent); }
+.inline-edit.num { font-family: var(--font-mono); text-align: right; }
+
+/* ── Publishing channels (4 канали у редакторі товару) ── */
+.publish-channels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+.pub-channel { background: var(--bg-sunken); border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; text-align: center; position: relative; cursor: pointer; transition: border-color 0.12s; }
+.pub-channel:hover { border-color: var(--line-strong); }
+.pub-channel.active { background: var(--accent-soft); border-color: var(--accent-line); }
+.pub-channel .check { position: absolute; top: 6px; right: 6px; color: var(--ok); }
+.pub-channel-emoji { font-size: 22px; margin-bottom: 4px; }
+.pub-channel-label { font-size: 12px; font-weight: 500; }
+
+/* ── Live preview картки у редакторі ─────────────────── */
+.inline-preview { aspect-ratio: 9/16; max-width: 180px; background: var(--bg-sunken); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; position: relative; }
+.inline-preview .product-thumb { aspect-ratio: 1; }
+
 .revenue-chart { display: flex; align-items: flex-end; gap: 8px; height: 220px; padding: 10px 0; }
 .rev-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; }
 .rev-bar-group { flex: 1; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; gap: 3px; }
