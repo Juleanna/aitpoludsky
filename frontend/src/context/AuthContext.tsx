@@ -11,7 +11,7 @@ type AuthStatus = "loading" | "authenticated" | "guest";
 type AuthContextValue = {
   user: User | null;
   status: AuthStatus;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
   signup: (data: { email: string; password: string; full_name?: string }) => Promise<void>;
   logout: () => Promise<void>;
   setLanguage: (language: string) => Promise<void>;
@@ -53,8 +53,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    const me = await authApi.login({ email, password });
+  const login = useCallback(async (email: string, password: string, rememberMe = false) => {
+    const me = await authApi.login({ email, password, remember_me: rememberMe });
     setUser(me);
     setStatus("authenticated");
     syncUILang(me.language);

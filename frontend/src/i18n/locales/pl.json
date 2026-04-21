@@ -148,6 +148,7 @@
     "noAccount": "Nie masz konta?",
     "goLogin": "Zaloguj",
     "goSignup": "Utwórz",
+    "rememberMe": "Zapamiętaj mnie na 14 dni",
     "invalidCredentials": "Nieprawidłowy email lub hasło.",
     "loginError": "Nie udało się zalogować.",
     "signupError": "Nie udało się utworzyć konta.",

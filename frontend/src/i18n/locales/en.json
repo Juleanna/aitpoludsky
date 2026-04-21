@@ -148,6 +148,7 @@
     "noAccount": "No account yet?",
     "goLogin": "Sign in",
     "goSignup": "Create",
+    "rememberMe": "Remember me for 14 days",
     "invalidCredentials": "Invalid email or password.",
     "loginError": "Could not sign in. Try again.",
     "signupError": "Could not create account.",

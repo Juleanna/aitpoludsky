@@ -43,6 +43,10 @@ class LoginView(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
         login(request, user)
+        # remember_me=False → сесія закривається при закритті браузера.
+        # remember_me=True → використовується глобальний SESSION_COOKIE_AGE.
+        if not serializer.validated_data.get("remember_me"):
+            request.session.set_expiry(0)
         return Response(UserSerializer(user).data)
 
 

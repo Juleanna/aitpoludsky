@@ -419,8 +419,11 @@
   min-height: 42px;
 }
 .lp-lang-card-price {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--accent-ink);
 }
 
 /* ── Stats ─────────────────────────────────────────────────────── */
@@ -433,11 +436,11 @@
   text-align: left;
 }
 .lp-stat-value {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   font-size: 56px;
   line-height: 1;
-  letter-spacing: -0.03em;
-  font-style: italic;
+  letter-spacing: -0.04em;
+  font-weight: 500;
   color: var(--accent-ink);
 }
 .lp-stat-label {

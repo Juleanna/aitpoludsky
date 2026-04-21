@@ -25,3 +25,6 @@ class SignupSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
+    # Коли False (за замовчуванням), сесія закривається при закритті браузера;
+    # коли True — діє стандартний SESSION_COOKIE_AGE (2 тижні).
+    remember_me = serializers.BooleanField(required=False, default=False)

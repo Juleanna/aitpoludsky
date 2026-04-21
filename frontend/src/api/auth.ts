@@ -5,7 +5,7 @@ export function signup(data: { email: string; password: string; full_name?: stri
   return apiFetch<User>("/auth/signup/", { method: "POST", body: data });
 }
 
-export function login(data: { email: string; password: string }) {
+export function login(data: { email: string; password: string; remember_me?: boolean }) {
   return apiFetch<User>("/auth/login/", { method: "POST", body: data });
 }
 

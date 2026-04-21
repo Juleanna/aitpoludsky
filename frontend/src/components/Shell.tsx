@@ -7,6 +7,7 @@ import * as inboxApi from "@/api/inbox";
 import { UI_LANGUAGES } from "@/i18n";
 import { useAuth } from "@/context/AuthContext";
 import { useShops } from "@/context/ShopContext";
+import { Brand } from "./Brand";
 import { Icon } from "./Icon";
 
 // Схема меню: секції з заголовками + пункти з іконками та опційними лічильниками.
@@ -151,8 +152,8 @@ export function Shell() {
         <div className="side-head">
           <div className="brand-mark">a</div>
           <div>
-            <div className="brand-name">{t("app.name")}</div>
-            <div className="brand-tag">
+            <Brand size="md" />
+            <div className="brand-tag" style={{ marginTop: 2 }}>
               {t("sidebar.health")} <strong style={{ color: "var(--text-2)", fontWeight: 500 }}>{health}/100</strong>
             </div>
           </div>
@@ -287,9 +288,9 @@ export function Shell() {
 
       <div className="main">
         <header className="topbar">
-          <div className="crumbs">
-            <span>{t("app.name")}</span>
-            <span className="sep">/</span>
+          <div className="crumbs" style={{ display: "flex", alignItems: "center" }}>
+            <Brand size="sm" tight />
+            <span className="sep" style={{ margin: "0 8px" }}>/</span>
             <span className="current">{titleKey ? t(titleKey) : ""}</span>
           </div>
           <div className="topbar-actions">

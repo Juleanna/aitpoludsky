@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { Brand } from "@/components/Brand";
 import { Icon } from "@/components/Icon";
 import { UI_LANGUAGES } from "@/i18n";
 import { useAuth } from "@/context/AuthContext";
@@ -34,7 +35,7 @@ export function LandingPage() {
         <div className="lp-top-inner">
           <Link to="/" className="lp-brand">
             <div className="lp-brand-mark">a</div>
-            <span className="lp-brand-name">{t("app.name")}</span>
+            <Brand size="md" />
           </Link>
           <nav className="lp-nav">
             <a href="#features">{t("landing.nav.features")}</a>
@@ -252,7 +253,7 @@ function Stat({ value, unit, label }: { value: string; unit?: string; label: str
     <div className="lp-stat">
       <div className="lp-stat-value">
         {value}
-        {unit && <span style={{ fontSize: "0.4em", marginLeft: 4, fontStyle: "normal" }}>{unit}</span>}
+        {unit && <span style={{ fontSize: "0.45em", marginLeft: 6, color: "var(--text-3)" }}>{unit}</span>}
       </div>
       <div className="lp-stat-label">{label}</div>
     </div>

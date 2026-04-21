@@ -148,6 +148,7 @@
     "noAccount": "Noch kein Konto?",
     "goLogin": "Anmelden",
     "goSignup": "Erstellen",
+    "rememberMe": "14 Tage angemeldet bleiben",
     "invalidCredentials": "Ungültige E-Mail oder Passwort.",
     "loginError": "Anmeldung fehlgeschlagen.",
     "signupError": "Konto konnte nicht erstellt werden.",

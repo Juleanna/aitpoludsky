@@ -106,6 +106,9 @@ REST_FRAMEWORK = {
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_HTTPONLY = False
+# Тривалість сесії при "Запам'ятати мене" — 14 діб; без чекбокса вона
+# закривається при закритті браузера (обробляється у LoginView).
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 14
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = config(

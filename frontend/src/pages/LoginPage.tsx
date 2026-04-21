@@ -5,12 +5,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { ApiError } from "@/api/client";
 import { useAuth } from "@/context/AuthContext";
 
+// Ключ, під яким у localStorage зберігаємо стан чекбокса "Запам'ятати мене".
+// Сам логін зберігається server-side через session cookie — тут лише UX-зручність.
+const REMEMBER_KEY = "ait_remember_me";
+
 export function LoginPage() {
   const { t } = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(() => localStorage.getItem(REMEMBER_KEY) === "1");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -19,7 +24,9 @@ export function LoginPage() {
     setError(null);
     setBusy(true);
     try {
-      await login(email, password);
+      await login(email, password, rememberMe);
+      // Зберігаємо лише прапорець, щоб наступного разу галочка вже була встановлена.
+      localStorage.setItem(REMEMBER_KEY, rememberMe ? "1" : "0");
       navigate("/dashboard", { replace: true });
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
@@ -60,8 +67,22 @@ export function LoginPage() {
               style={inputStyle}
             />
           </label>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text-2)", cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              style={{ accentColor: "var(--accent)" }}
+            />
+            {t("auth.rememberMe")}
+          </label>
           {error && <div style={{ fontSize: 12, color: "var(--err)" }}>{error}</div>}
-          <button type="submit" className="btn accent" disabled={busy} style={{ justifyContent: "center", padding: "10px 14px" }}>
+          <button
+            type="submit"
+            className="btn accent"
+            disabled={busy}
+            style={{ justifyContent: "center", padding: "10px 14px" }}
+          >
             {busy ? t("auth.loggingIn") : t("auth.login")}
           </button>
         </form>
