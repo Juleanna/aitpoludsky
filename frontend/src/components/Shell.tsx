@@ -163,7 +163,7 @@ export function Shell() {
         {/* Заголовок: логотип + HEALTH-бейдж */}
         <div className="side-head">
           <div className="brand-mark">a</div>
-          <div>
+          <div className="side-head-text">
             <Brand size="md" />
             <div className="brand-tag" style={{ marginTop: 2 }}>
               {t("sidebar.health")} <strong style={{ color: "var(--text-2)", fontWeight: 500 }}>{health}/100</strong>
@@ -173,7 +173,7 @@ export function Shell() {
 
         {/* Селектор активного магазину — показуємо якщо магазинів >1 */}
         {shops.length > 1 && (
-          <div style={{ padding: "10px 14px", borderBottom: "1px solid var(--line)" }}>
+          <div className="side-shop-select" style={{ padding: "10px 14px", borderBottom: "1px solid var(--line)" }}>
             <select
               value={activeShop?.slug ?? ""}
               onChange={(e) => setActiveSlug(e.target.value)}

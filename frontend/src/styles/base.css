@@ -70,6 +70,10 @@ input, select, textarea { font-family: inherit; color: inherit; }
 .app[data-sidebar='compact'] .side-section-label,
 .app[data-sidebar='compact'] .brand-name,
 .app[data-sidebar='compact'] .brand-tag,
+.app[data-sidebar='compact'] .side-head-text,
+.app[data-sidebar='compact'] .brand-word,
+.app[data-sidebar='compact'] .side-shop-select,
+.app[data-sidebar='compact'] .side-count,
 .app[data-sidebar='compact'] .side-foot { display: none; }
 .app[data-sidebar='compact'] .side-item { justify-content: center; padding: 10px; }
 .app[data-sidebar='compact'] .side-head { padding: 14px; justify-content: center; }
