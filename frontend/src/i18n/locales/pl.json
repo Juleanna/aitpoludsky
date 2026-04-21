@@ -366,8 +366,11 @@
     "addToCart": "Do koszyka"
   },
   "topbar": {
-    "searchPlaceholder": "Szukaj",
-    "language": "Język"
+    "searchPlaceholder": "Szukaj wszędzie…",
+    "language": "Język",
+    "toggleSidebar": "Zwiń / rozwiń menu",
+    "shortcuts": "Skróty klawiaturowe",
+    "notifications": "Powiadomienia"
   },
   "tiers": {
     "bronze": "Bronze",

@@ -366,8 +366,11 @@
     "addToCart": "Add to cart"
   },
   "topbar": {
-    "searchPlaceholder": "Search",
-    "language": "Language"
+    "searchPlaceholder": "Search everything…",
+    "language": "Language",
+    "toggleSidebar": "Collapse / expand menu",
+    "shortcuts": "Keyboard shortcuts",
+    "notifications": "Notifications"
   },
   "tiers": {
     "bronze": "Bronze",

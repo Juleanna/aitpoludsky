@@ -366,8 +366,11 @@
     "addToCart": "In den Warenkorb"
   },
   "topbar": {
-    "searchPlaceholder": "Suche",
-    "language": "Sprache"
+    "searchPlaceholder": "Überall suchen…",
+    "language": "Sprache",
+    "toggleSidebar": "Menü ein-/ausklappen",
+    "shortcuts": "Tastenkürzel",
+    "notifications": "Benachrichtigungen"
   },
   "tiers": {
     "bronze": "Bronze",

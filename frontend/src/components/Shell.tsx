@@ -110,6 +110,18 @@ export function Shell() {
 
   const [counts, setCounts] = useState<SidebarCounts>({ orders: 0, catalog: 0, inbox: 0, locations: 0 });
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  // Згорнутий sidebar — читаємо/пишемо в localStorage, щоб зберігати стан
+  // між перезавантаженнями сторінки.
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(
+    () => localStorage.getItem("ait_sidebar_collapsed") === "1",
+  );
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed((v) => {
+      const next = !v;
+      localStorage.setItem("ait_sidebar_collapsed", next ? "1" : "0");
+      return next;
+    });
+  }, []);
 
   // Лічильники для бейджів у сайдбарі — зі зведеного дашборд-ендпоінту
   // плюс окремий запит на inbox (непрочитані треди).
@@ -146,7 +158,7 @@ export function Shell() {
   const shopHandle = activeShop ? `${activeShop.slug}.shop` : "";
 
   return (
-    <div className="app" data-sidebar="expanded">
+    <div className="app" data-sidebar={sidebarCollapsed ? "compact" : "expanded"}>
       <aside className="side">
         {/* Заголовок: логотип + HEALTH-бейдж */}
         <div className="side-head">
@@ -288,16 +300,54 @@ export function Shell() {
 
       <div className="main">
         <header className="topbar">
-          <div className="crumbs" style={{ display: "flex", alignItems: "center" }}>
-            <Brand size="sm" tight />
-            <span className="sep" style={{ margin: "0 8px" }}>/</span>
+          {/* Гамбургер — згорнути/розгорнути сайдбар */}
+          <button
+            className="topbar-icon-btn"
+            onClick={toggleSidebar}
+            aria-label={t("topbar.toggleSidebar")}
+            title={t("topbar.toggleSidebar")}
+          >
+            <Icon name="menu" size={18} />
+          </button>
+
+          {/* Крихти: Назва магазину / Поточний розділ */}
+          <div className="crumbs">
+            <span>{activeShop?.name ?? t("app.name")}</span>
+            <span className="sep">/</span>
             <span className="current">{titleKey ? t(titleKey) : ""}</span>
           </div>
+
           <div className="topbar-actions">
             <div className="search" role="button" tabIndex={0}>
               <Icon name="search" size={14} />
               <span>{t("topbar.searchPlaceholder")}</span>
               <span className="kbd">⌘K</span>
+            </div>
+
+            {/* Клавіатурні скорочення — поки placeholder */}
+            <button
+              className="topbar-icon-btn"
+              aria-label={t("topbar.shortcuts")}
+              title={t("topbar.shortcuts")}
+            >
+              <Icon name="keyboard" size={16} />
+            </button>
+
+            {/* Сповіщення — число непрочитаних з Inbox */}
+            <button
+              className="topbar-icon-btn"
+              aria-label={t("topbar.notifications")}
+              title={t("topbar.notifications")}
+              style={{ position: "relative" }}
+            >
+              <Icon name="bell" size={16} />
+              {counts.inbox > 0 && <span className="topbar-badge">{counts.inbox}</span>}
+            </button>
+
+            {/* Користувач — аватар + імʼя */}
+            <div className="topbar-user" title={user?.email}>
+              <div className="avatar">{userInitial}</div>
+              <span className="topbar-user-name">{userName}</span>
             </div>
           </div>
         </header>

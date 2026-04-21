@@ -366,8 +366,11 @@
     "addToCart": "У кошик"
   },
   "topbar": {
-    "searchPlaceholder": "Пошук",
-    "language": "Мова"
+    "searchPlaceholder": "Шукати все…",
+    "language": "Мова",
+    "toggleSidebar": "Згорнути / розгорнути меню",
+    "shortcuts": "Клавіатурні скорочення",
+    "notifications": "Сповіщення"
   },
   "tiers": {
     "bronze": "Bronze",
