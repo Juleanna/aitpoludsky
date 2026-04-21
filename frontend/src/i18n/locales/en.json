@@ -370,7 +370,28 @@
     "language": "Language",
     "toggleSidebar": "Collapse / expand menu",
     "shortcuts": "Keyboard shortcuts",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "quickScreens": "Quick screens"
+  },
+  "maria": {
+    "name": "Maria",
+    "subtitle": "AI assistant",
+    "openLabel": "Open Maria",
+    "welcome": "Hi! I'm Maria — your AI assistant. Pick a prompt below or type your question.",
+    "inputPlaceholder": "Ask Maria…",
+    "mockReply": "Good question: \"{{topic}}\". I'm still learning — I'll connect to your data soon.",
+    "prompts": {
+      "sales": "What sold today?",
+      "lowStock": "Show low stock",
+      "newCustomers": "How many new customers?",
+      "bestSeller": "What's the best seller?"
+    },
+    "replies": {
+      "sales": "Daily summary lives on /dashboard — see the \"Sales today\" card with 14-day sparkline.",
+      "lowStock": "Low stock appears on the dashboard's \"Inventory\" card. Full log is in the Inventory section.",
+      "newCustomers": "In \"Customers\" you can sort by creation date — newest come first.",
+      "bestSeller": "Product ranking is in progress. Future versions will show top 5 by revenue."
+    }
   },
   "tiers": {
     "bronze": "Bronze",

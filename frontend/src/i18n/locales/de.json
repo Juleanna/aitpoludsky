@@ -370,7 +370,28 @@
     "language": "Sprache",
     "toggleSidebar": "Menü ein-/ausklappen",
     "shortcuts": "Tastenkürzel",
-    "notifications": "Benachrichtigungen"
+    "notifications": "Benachrichtigungen",
+    "quickScreens": "Schnelle Bildschirme"
+  },
+  "maria": {
+    "name": "Maria",
+    "subtitle": "KI-Assistentin",
+    "openLabel": "Maria öffnen",
+    "welcome": "Hallo! Ich bin Maria — deine KI-Assistentin. Wähle einen Vorschlag unten oder stelle eine Frage.",
+    "inputPlaceholder": "Maria fragen…",
+    "mockReply": "Gute Frage: „{{topic}}\". Ich lerne noch — bald verbinde ich mich mit deinen Daten.",
+    "prompts": {
+      "sales": "Was wurde heute verkauft?",
+      "lowStock": "Niedrige Bestände zeigen",
+      "newCustomers": "Wie viele neue Kunden?",
+      "bestSeller": "Was ist der Bestseller?"
+    },
+    "replies": {
+      "sales": "Tagesübersicht liegt auf /dashboard — Karte „Umsatz heute\" mit 14-Tage-Sparkline.",
+      "lowStock": "Niedriger Bestand erscheint auf der Karte „Lager\" im Dashboard. Vollständiges Journal im Lagerbereich.",
+      "newCustomers": "In „Kunden\" nach Erstellungsdatum sortieren — neueste oben.",
+      "bestSeller": "Produkt-Ranking ist in Arbeit. Künftige Versionen zeigen Top 5 nach Umsatz."
+    }
   },
   "tiers": {
     "bronze": "Bronze",

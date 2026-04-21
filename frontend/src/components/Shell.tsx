@@ -9,6 +9,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useShops } from "@/context/ShopContext";
 import { Brand } from "./Brand";
 import { Icon } from "./Icon";
+import { MariaAssistant } from "./MariaAssistant";
+import { QuickScreens } from "./QuickScreens";
 
 // Схема меню: секції з заголовками + пункти з іконками та опційними лічильниками.
 type NavItem = {
@@ -351,7 +353,12 @@ export function Shell() {
             </div>
           </div>
         </header>
+
+        <QuickScreens />
+
         <Outlet />
+
+        <MariaAssistant />
       </div>
     </div>
   );

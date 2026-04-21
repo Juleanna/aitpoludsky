@@ -370,7 +370,28 @@
     "language": "Język",
     "toggleSidebar": "Zwiń / rozwiń menu",
     "shortcuts": "Skróty klawiaturowe",
-    "notifications": "Powiadomienia"
+    "notifications": "Powiadomienia",
+    "quickScreens": "Szybkie ekrany"
+  },
+  "maria": {
+    "name": "Maria",
+    "subtitle": "AI asystentka",
+    "openLabel": "Otwórz Marię",
+    "welcome": "Cześć! Jestem Maria — Twoja AI asystentka. Wybierz podpowiedź poniżej lub napisz pytanie.",
+    "inputPlaceholder": "Zapytaj Marię…",
+    "mockReply": "Dobre pytanie: „{{topic}}\". Wciąż się uczę — wkrótce podłączę się do Twoich danych.",
+    "prompts": {
+      "sales": "Co sprzedało się dziś?",
+      "lowStock": "Pokaż niski stan",
+      "newCustomers": "Ilu nowych klientów?",
+      "bestSeller": "Jaki jest najlepszy produkt?"
+    },
+    "replies": {
+      "sales": "Dzienne zestawienie jest na /dashboard — karta „Sprzedaż dziś\" z 14-dniowym sparkline.",
+      "lowStock": "Niski stan pokazuje karta „Magazyn\" na panelu. Pełny dziennik w sekcji Magazyn.",
+      "newCustomers": "W „Klienci\" można sortować po dacie utworzenia — najnowsi są na górze.",
+      "bestSeller": "Ranking produktów w przygotowaniu. W kolejnych wersjach pokaże top 5 po przychodach."
+    }
   },
   "tiers": {
     "bronze": "Bronze",
