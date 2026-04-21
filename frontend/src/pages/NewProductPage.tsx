@@ -1049,8 +1049,6 @@ export function NewProductPage() {
               display: "flex",
               flexDirection: "column",
               gap: 20,
-              maxHeight: "calc(100vh - 100px)",
-              overflowY: "auto",
             }}
           >
           <section className="np-card">
