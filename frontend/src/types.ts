@@ -23,15 +23,58 @@ export type Currency = Shop["currency"];
 
 export type ProductTranslations = Record<string, { name?: string; description?: string }>;
 
+export type ProductCategory = "coffee" | "clothes" | "cosmetics" | "handmade" | "food" | "other";
+export type ProductVatStatus = "none" | "20" | "7";
+export type ProductChannel = "web" | "ig" | "google" | "pos";
+
+export type ProductVariant = {
+  id: number;
+  name: string;
+  sku: string;
+  price: string;
+  stock: number;
+  position: number;
+};
+
+export type ProductVariantInput = {
+  id?: number;
+  name: string;
+  sku: string;
+  price: string;
+  stock: number;
+  position?: number;
+};
+
 export type Product = {
   id: number;
   sku: string;
   name: string;
   description: string;
-  price: string; // DRF серіалізує DecimalField як рядок, щоб зберегти точність
+  // Категорія та бренд
+  category: ProductCategory;
+  brand: string;
+  producer: string;
+  tags: string[];
+  // Ціна і фінанси (DRF серіалізує DecimalField як рядок, щоб зберегти точність)
+  price: string;
+  compare_at_price: string | null;
+  cost: string | null;
+  vat_status: ProductVatStatus;
+  // Склад
   stock: number;
+  barcode: string;
+  weight_grams: number | null;
+  // Видимість + переклади
   is_active: boolean;
   translations: ProductTranslations;
+  // SEO
+  url_slug: string;
+  meta_title: string;
+  meta_description: string;
+  // Канали і варіанти
+  channels: ProductChannel[];
+  variants: ProductVariant[];
+  // Аудит
   created_at: string;
   updated_at: string;
 };
@@ -40,10 +83,24 @@ export type ProductInput = {
   sku: string;
   name: string;
   description?: string;
+  category?: ProductCategory;
+  brand?: string;
+  producer?: string;
+  tags?: string[];
   price: string;
+  compare_at_price?: string | null;
+  cost?: string | null;
+  vat_status?: ProductVatStatus;
   stock: number;
+  barcode?: string;
+  weight_grams?: number | null;
   is_active?: boolean;
   translations?: ProductTranslations;
+  url_slug?: string;
+  meta_title?: string;
+  meta_description?: string;
+  channels?: ProductChannel[];
+  variants?: ProductVariantInput[];
 };
 
 export type OrderStatus = "draft" | "pending" | "paid" | "shipped" | "completed" | "cancelled";

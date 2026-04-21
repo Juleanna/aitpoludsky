@@ -1,12 +1,64 @@
 from django.contrib import admin
 
-from .models import Product
+from .models import Product, ProductVariant
+
+
+class ProductVariantInline(admin.TabularInline):
+    model = ProductVariant
+    extra = 0
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("name", "sku", "shop", "price", "stock", "is_active", "updated_at")
-    list_filter = ("shop", "is_active")
-    search_fields = ("name", "sku")
+    list_display = (
+        "name",
+        "sku",
+        "shop",
+        "category",
+        "price",
+        "stock",
+        "is_active",
+        "updated_at",
+    )
+    list_filter = ("shop", "category", "vat_status", "is_active")
+    search_fields = ("name", "sku", "barcode", "brand", "producer")
     autocomplete_fields = ("shop",)
     readonly_fields = ("created_at", "updated_at")
+    inlines = [ProductVariantInline]
+    fieldsets = (
+        (
+            "Основне",
+            {"fields": ("shop", "sku", "name", "description", "category", "brand", "producer", "tags")},
+        ),
+        (
+            "Ціна та фінанси",
+            {"fields": ("price", "compare_at_price", "cost", "vat_status")},
+        ),
+        (
+            "Склад",
+            {"fields": ("stock", "barcode", "weight_grams")},
+        ),
+        (
+            "Видимість і переклади",
+            {"fields": ("is_active", "translations")},
+        ),
+        (
+            "SEO",
+            {"fields": ("url_slug", "meta_title", "meta_description")},
+        ),
+        (
+            "Канали",
+            {"fields": ("channels",)},
+        ),
+        (
+            "Дати",
+            {"fields": ("created_at", "updated_at")},
+        ),
+    )
+
+
+@admin.register(ProductVariant)
+class ProductVariantAdmin(admin.ModelAdmin):
+    list_display = ("name", "sku", "product", "price", "stock", "position")
+    search_fields = ("name", "sku", "product__name")
+    autocomplete_fields = ("product",)

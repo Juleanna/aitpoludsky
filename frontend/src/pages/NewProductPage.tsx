@@ -6,7 +6,7 @@ import { ApiError } from "@/api/client";
 import * as catalogApi from "@/api/catalog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
-import type { ProductInput } from "@/types";
+import type { ProductCategory, ProductChannel, ProductInput, ProductVatStatus } from "@/types";
 import { formatMoney } from "@/utils/format";
 
 // Повноекранна сторінка створення нового товару. Повторює розкладку прототипу:
@@ -15,9 +15,7 @@ import { formatMoney } from "@/utils/format";
 // записуємо лише ті, що підтримуються (name, sku, description, price, stock,
 // is_active). Решта — UI-only, готова до розширення схеми пізніше.
 
-type ChannelKey = "web" | "ig" | "google" | "pos";
-
-const CHANNELS: { key: ChannelKey; emoji: string; subKey: string }[] = [
+const CHANNELS: { key: ProductChannel; emoji: string; subKey: string }[] = [
   { key: "web", emoji: "🌐", subKey: "newProduct.channels.webSub" },
   { key: "ig", emoji: "📸", subKey: "newProduct.channels.igSub" },
   { key: "google", emoji: "🔍", subKey: "newProduct.channels.googleSub" },
@@ -29,8 +27,6 @@ const META_DESC_MAX = 160;
 
 type Variant = { id: string; name: string; price: string; stock: number; sku: string };
 
-type VatStatus = "none" | "20" | "7";
-
 export function NewProductPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -39,7 +35,7 @@ export function NewProductPage() {
   // Основне
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("coffee");
+  const [category, setCategory] = useState<ProductCategory>("coffee");
   const [brand, setBrand] = useState(activeShop?.name ?? "");
   const [producer, setProducer] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -49,7 +45,7 @@ export function NewProductPage() {
   const [price, setPrice] = useState("0");
   const [compareAt, setCompareAt] = useState("");
   const [cost, setCost] = useState("");
-  const [vat, setVat] = useState<VatStatus>("none");
+  const [vat, setVat] = useState<ProductVatStatus>("none");
   const [stock, setStock] = useState("10");
   const [sku, setSku] = useState("");
   const [barcode, setBarcode] = useState("");
@@ -60,7 +56,7 @@ export function NewProductPage() {
   const [variants] = useState<Variant[]>([]);
 
   // Канали публікації
-  const [channels, setChannels] = useState<Set<ChannelKey>>(new Set(["web", "ig", "pos"]));
+  const [channels, setChannels] = useState<Set<ProductChannel>>(new Set(["web", "ig", "pos"]));
 
   // SEO
   const [urlSlug, setUrlSlug] = useState("");
@@ -79,7 +75,7 @@ export function NewProductPage() {
   function removeTag(tag: string) {
     setTags(tags.filter((t) => t !== tag));
   }
-  function toggleChannel(k: ChannelKey) {
+  function toggleChannel(k: ProductChannel) {
     setChannels((prev) => {
       const next = new Set(prev);
       if (next.has(k)) next.delete(k);
@@ -112,9 +108,22 @@ export function NewProductPage() {
         name,
         sku,
         description,
+        category,
+        brand,
+        producer,
+        tags,
         price,
+        compare_at_price: compareAt ? compareAt : null,
+        cost: cost ? cost : null,
+        vat_status: vat,
         stock: Number(stock) || 0,
+        barcode,
+        weight_grams: weight ? Number(weight) : null,
         is_active: activate,
+        url_slug: urlSlug,
+        meta_title: metaTitle,
+        meta_description: metaDesc,
+        channels: Array.from(channels),
       };
       await catalogApi.createProduct(activeShop.slug, payload);
       navigate("/catalog");
@@ -234,7 +243,7 @@ export function NewProductPage() {
                 <select
                   className="onb-input"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => setCategory(e.target.value as ProductCategory)}
                 >
                   <option value="coffee">{t("onboarding.categories.coffee")}</option>
                   <option value="clothes">{t("onboarding.categories.clothes")}</option>
@@ -348,7 +357,7 @@ export function NewProductPage() {
                 <select
                   className="onb-input"
                   value={vat}
-                  onChange={(e) => setVat(e.target.value as VatStatus)}
+                  onChange={(e) => setVat(e.target.value as ProductVatStatus)}
                 >
                   <option value="none">{t("newProduct.vat.none")}</option>
                   <option value="20">{t("newProduct.vat.v20")}</option>

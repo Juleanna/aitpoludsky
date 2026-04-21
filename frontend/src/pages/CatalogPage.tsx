@@ -5,13 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 import * as catalogApi from "@/api/catalog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
-import type { Product, ProductInput } from "@/types";
+import type { Product, ProductChannel, ProductInput } from "@/types";
 import { formatMoney } from "@/utils/format";
 
-// Канали публікації — поки UI-only (немає бекенд-поля).
-// У майбутньому можна додати поле у Product і серіалізовувати.
-type ChannelKey = "web" | "ig" | "google" | "pos";
-const CHANNELS: { key: ChannelKey; emoji: string }[] = [
+// Канали публікації — тепер справжні, зберігаються у Product.channels.
+const CHANNELS: { key: ProductChannel; emoji: string }[] = [
   { key: "web", emoji: "🌐" },
   { key: "ig", emoji: "📸" },
   { key: "google", emoji: "🔍" },
@@ -29,8 +27,6 @@ export function CatalogPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  // Активні канали публікації для поточного товару в редакторі (UI-only).
-  const [channels, setChannels] = useState<Set<ChannelKey>>(new Set(["web", "ig", "pos"]));
 
   const slug = activeShop?.slug ?? null;
 
@@ -263,19 +259,16 @@ export function CatalogPage() {
 
               <div className="publish-channels">
                 {CHANNELS.map((c) => {
-                  const on = channels.has(c.key);
+                  const current = selected.channels ?? [];
+                  const on = current.includes(c.key);
                   return (
                     <div
                       key={c.key}
                       className={`pub-channel ${on ? "active" : ""}`}
-                      onClick={() =>
-                        setChannels((prev) => {
-                          const next = new Set(prev);
-                          if (next.has(c.key)) next.delete(c.key);
-                          else next.add(c.key);
-                          return next;
-                        })
-                      }
+                      onClick={() => {
+                        const next = on ? current.filter((k) => k !== c.key) : [...current, c.key];
+                        void patchProduct(selected.id, { channels: next });
+                      }}
                     >
                       {on && (
                         <span className="check">
@@ -308,8 +301,19 @@ export function CatalogPage() {
                     {t("catalog.previewCategory").toUpperCase()}
                   </div>
                   <div style={{ fontSize: 13, fontWeight: 500, marginTop: 2 }}>{selected.name}</div>
-                  <div className="serif" style={{ fontSize: 18, marginTop: 4 }}>
-                    {formatMoney(selected.price, activeShop.currency)}
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 4 }}>
+                    <span className="serif" style={{ fontSize: 18 }}>
+                      {formatMoney(selected.price, activeShop.currency)}
+                    </span>
+                    {selected.compare_at_price &&
+                      Number(selected.compare_at_price) > Number(selected.price) && (
+                        <span
+                          className="serif"
+                          style={{ fontSize: 13, color: "var(--text-3)", textDecoration: "line-through" }}
+                        >
+                          {formatMoney(selected.compare_at_price, activeShop.currency)}
+                        </span>
+                      )}
                   </div>
                 </div>
               </div>
