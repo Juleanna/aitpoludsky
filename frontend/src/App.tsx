@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import { ConfirmProvider } from "@/components/ConfirmDialog";
 import { RequireAuth, RequireGuest } from "@/components/RequireAuth";
 import { Shell } from "@/components/Shell";
 import { TweaksButton } from "@/components/TweaksPanel";
@@ -30,6 +31,7 @@ export function App() {
       <TweaksProvider>
         <AuthProvider>
           <ShopProvider>
+            <ConfirmProvider>
             <Routes>
               {/* Публічні роути — лендинг, storefront, форми входу */}
               <Route path="/" element={<LandingPage />} />
@@ -117,6 +119,7 @@ export function App() {
 
             {/* Tweaks-кнопка доступна на всьому сайті, включно з лендингом */}
             <TweaksButton />
+            </ConfirmProvider>
           </ShopProvider>
         </AuthProvider>
       </TweaksProvider>

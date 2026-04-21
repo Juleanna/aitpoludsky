@@ -6,6 +6,7 @@ import { ApiError } from "@/api/client";
 import * as catalogApi from "@/api/catalog";
 import * as discountsApi from "@/api/discounts";
 import * as ordersApi from "@/api/orders";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
 import type { DiscountValidateResult, Order, OrderChannel, OrderInput, OrderItemInput, OrderStatus, Product } from "@/types";
@@ -26,6 +27,7 @@ const STATUS_CHIP: Record<OrderStatus, string> = {
 export function OrdersPage() {
   const { t } = useTranslation();
   const { activeShop } = useShops();
+  const ask = useConfirm();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +61,12 @@ export function OrdersPage() {
 
   async function handleDelete(id: number) {
     if (!slug) return;
-    if (!confirm(t("orders.deleteConfirm"))) return;
+    const ok = await ask({
+      title: t("orders.deleteConfirm"),
+      confirmLabel: t("common.delete"),
+      tone: "danger",
+    });
+    if (!ok) return;
     await ordersApi.deleteOrder(slug, id);
     await reload();
   }

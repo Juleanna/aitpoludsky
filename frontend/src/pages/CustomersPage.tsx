@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import { ApiError } from "@/api/client";
 import * as customersApi from "@/api/customers";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
 import type { Customer, CustomerInput, CustomerTier } from "@/types";
@@ -17,6 +18,7 @@ const EMPTY: FormState = { name: "", email: "", phone: "", tier: "bronze", note:
 export function CustomersPage() {
   const { t } = useTranslation();
   const { activeShop } = useShops();
+  const ask = useConfirm();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +45,12 @@ export function CustomersPage() {
 
   async function handleDelete(id: number) {
     if (!slug) return;
-    if (!confirm(t("customers.deleteConfirm"))) return;
+    const ok = await ask({
+      title: t("customers.deleteConfirm"),
+      confirmLabel: t("common.delete"),
+      tone: "danger",
+    });
+    if (!ok) return;
     await customersApi.deleteCustomer(slug, id);
     await reload();
   }

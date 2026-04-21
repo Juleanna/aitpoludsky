@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { ApiError } from "@/api/client";
 import * as catalogApi from "@/api/catalog";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
 import type { Category } from "@/types";
@@ -16,6 +17,7 @@ export function CategoriesPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { activeShop } = useShops();
+  const ask = useConfirm();
 
   const [items, setItems] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
@@ -101,7 +103,12 @@ export function CategoriesPage() {
 
   async function handleDelete(id: number) {
     if (!slug) return;
-    if (!confirm(t("categories.deleteConfirm"))) return;
+    const ok = await ask({
+      title: t("categories.deleteConfirm"),
+      confirmLabel: t("common.delete"),
+      tone: "danger",
+    });
+    if (!ok) return;
     setBusy(true);
     setError(null);
     try {

@@ -201,6 +201,8 @@ input, select, textarea { font-family: inherit; color: inherit; }
 .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
 .btn.primary:hover { background: var(--text-2); }
 .btn.accent { background: var(--accent); color: white; border-color: var(--accent); }
+.btn.danger { background: var(--err); color: white; border-color: var(--err); }
+.btn.danger:hover { filter: brightness(0.94); background: var(--err); border-color: var(--err); }
 .btn.ghost { border-color: transparent; background: transparent; }
 .btn.ghost:hover { background: var(--bg-tint); }
 .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.75; }

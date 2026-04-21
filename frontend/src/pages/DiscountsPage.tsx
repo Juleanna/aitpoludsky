@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import { ApiError } from "@/api/client";
 import * as discountsApi from "@/api/discounts";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
 import type { Discount, DiscountInput, DiscountKind } from "@/types";
@@ -27,6 +28,7 @@ function emptyForm(): FormState {
 export function DiscountsPage() {
   const { t } = useTranslation();
   const { activeShop } = useShops();
+  const ask = useConfirm();
   const [items, setItems] = useState<Discount[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,12 @@ export function DiscountsPage() {
 
   async function handleDelete(id: number) {
     if (!slug) return;
-    if (!confirm(t("discounts.deleteConfirm"))) return;
+    const ok = await ask({
+      title: t("discounts.deleteConfirm"),
+      confirmLabel: t("common.delete"),
+      tone: "danger",
+    });
+    if (!ok) return;
     await discountsApi.deleteDiscount(slug, id);
     await reload();
   }

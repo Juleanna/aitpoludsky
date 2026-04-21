@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
 import * as catalogApi from "@/api/catalog";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
 import type { Product, ProductChannel, ProductInput } from "@/types";
@@ -23,6 +24,7 @@ export function CatalogPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { activeShop } = useShops();
+  const ask = useConfirm();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +61,12 @@ export function CatalogPage() {
 
   async function handleDelete(id: number) {
     if (!slug) return;
-    if (!confirm(t("catalog.deleteConfirm"))) return;
+    const ok = await ask({
+      title: t("catalog.deleteConfirm"),
+      confirmLabel: t("common.delete"),
+      tone: "danger",
+    });
+    if (!ok) return;
     await catalogApi.deleteProduct(slug, id);
     if (selectedId === id) setSelectedId(null);
     await reload();
