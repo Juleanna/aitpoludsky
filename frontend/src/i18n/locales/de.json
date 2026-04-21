@@ -91,7 +91,64 @@
     "storefront": "Online-Shop",
     "pos": "POS",
     "inbox": "Postfach",
+    "onboarding": "Einrichtung",
     "shops": "Shops"
+  },
+  "onboarding": {
+    "title": "Willkommen bei",
+    "stepOf": "SCHRITT {{current}} VON {{total}}",
+    "videoTitle": "Shop in 10 Minuten starten",
+    "videoMeta": "1:42 · Rundgang",
+    "steps": {
+      "1": "Shop",
+      "2": "Produkte",
+      "3": "Zahlung",
+      "4": "Versand",
+      "5": "Start"
+    },
+    "categories": {
+      "coffee": "Kaffee & Tee",
+      "clothes": "Kleidung",
+      "cosmetics": "Kosmetik",
+      "handmade": "Handgemacht",
+      "food": "Lebensmittel",
+      "other": "Sonstiges"
+    },
+    "shop": {
+      "name": "Shop-Name",
+      "namePlaceholder": "Mein Café",
+      "domain": "Domain",
+      "category": "Was verkaufen Sie?"
+    },
+    "product": {
+      "name": "Produktname",
+      "namePlaceholder": "Espresso-Mischung",
+      "sku": "SKU",
+      "price": "Preis (₴)",
+      "hint": "Ihr erstes Produkt — später im Katalog editierbar. Standardbestand: 10."
+    },
+    "payment": {
+      "lede": "Wählen Sie Zahlungsmethoden für Kunden:",
+      "methods": {
+        "cash": "Bar",
+        "card": "Karte",
+        "bank": "Überweisung",
+        "qr": "QR / Apple Pay"
+      }
+    },
+    "shipping": {
+      "lede": "Wie erhalten Kunden ihre Bestellungen?",
+      "methods": {
+        "pickup": "Abholung",
+        "novaPoshta": "Nova Poshta",
+        "courier": "Kurier"
+      }
+    },
+    "launch": {
+      "title": "Alles bereit!",
+      "desc": "Shop erstellt, erstes Produkt hinzugefügt. Gehen Sie zum Dashboard, fügen Sie weitere Produkte hinzu und starten Sie den Verkauf.",
+      "cta": "Zum Dashboard"
+    }
   },
   "sidebar": {
     "health": "HEALTH",

@@ -91,7 +91,64 @@
     "storefront": "Online Store",
     "pos": "POS",
     "inbox": "Inbox",
+    "onboarding": "Onboarding",
     "shops": "Shops"
+  },
+  "onboarding": {
+    "title": "Welcome to",
+    "stepOf": "STEP {{current}} OF {{total}}",
+    "videoTitle": "Launch your shop in 10 minutes",
+    "videoMeta": "1:42 · walkthrough",
+    "steps": {
+      "1": "Shop",
+      "2": "Products",
+      "3": "Payment",
+      "4": "Shipping",
+      "5": "Launch"
+    },
+    "categories": {
+      "coffee": "Coffee & tea",
+      "clothes": "Clothing",
+      "cosmetics": "Cosmetics",
+      "handmade": "Handmade",
+      "food": "Food",
+      "other": "Other"
+    },
+    "shop": {
+      "name": "Shop name",
+      "namePlaceholder": "My coffee shop",
+      "domain": "Domain",
+      "category": "What do you sell?"
+    },
+    "product": {
+      "name": "Product name",
+      "namePlaceholder": "Espresso blend",
+      "sku": "SKU",
+      "price": "Price (₴)",
+      "hint": "Your first product — editable later in the catalog. Default stock is 10."
+    },
+    "payment": {
+      "lede": "Pick methods customers can pay with:",
+      "methods": {
+        "cash": "Cash",
+        "card": "Card",
+        "bank": "Bank transfer",
+        "qr": "QR / Apple Pay"
+      }
+    },
+    "shipping": {
+      "lede": "How will customers receive their orders?",
+      "methods": {
+        "pickup": "Pickup",
+        "novaPoshta": "Nova Poshta",
+        "courier": "Courier"
+      }
+    },
+    "launch": {
+      "title": "All set!",
+      "desc": "Shop created, first product added. Now head to the dashboard, keep adding products and start selling.",
+      "cta": "To dashboard"
+    }
   },
   "sidebar": {
     "health": "HEALTH",

@@ -91,7 +91,64 @@
     "storefront": "Sklep online",
     "pos": "POS",
     "inbox": "Wiadomości",
+    "onboarding": "Onboarding",
     "shops": "Sklepy"
+  },
+  "onboarding": {
+    "title": "Witamy w",
+    "stepOf": "KROK {{current}} Z {{total}}",
+    "videoTitle": "Uruchom sklep w 10 minut",
+    "videoMeta": "1:42 · prezentacja",
+    "steps": {
+      "1": "Sklep",
+      "2": "Produkty",
+      "3": "Płatność",
+      "4": "Dostawa",
+      "5": "Start"
+    },
+    "categories": {
+      "coffee": "Kawa i herbata",
+      "clothes": "Odzież",
+      "cosmetics": "Kosmetyki",
+      "handmade": "Handmade",
+      "food": "Żywność",
+      "other": "Inne"
+    },
+    "shop": {
+      "name": "Nazwa sklepu",
+      "namePlaceholder": "Moja kawiarnia",
+      "domain": "Domena",
+      "category": "Co sprzedajesz?"
+    },
+    "product": {
+      "name": "Nazwa produktu",
+      "namePlaceholder": "Mieszanka espresso",
+      "sku": "SKU",
+      "price": "Cena (₴)",
+      "hint": "Twój pierwszy produkt — można edytować później w katalogu. Domyślny stan: 10."
+    },
+    "payment": {
+      "lede": "Wybierz metody płatności dla klientów:",
+      "methods": {
+        "cash": "Gotówka",
+        "card": "Karta",
+        "bank": "Przelew",
+        "qr": "QR / Apple Pay"
+      }
+    },
+    "shipping": {
+      "lede": "Jak klienci otrzymają zamówienia?",
+      "methods": {
+        "pickup": "Odbiór osobisty",
+        "novaPoshta": "Nova Poshta",
+        "courier": "Kurier"
+      }
+    },
+    "launch": {
+      "title": "Wszystko gotowe!",
+      "desc": "Sklep utworzony, pierwszy produkt dodany. Teraz przejdź do panelu, dodawaj więcej produktów i zacznij sprzedawać.",
+      "cta": "Do panelu"
+    }
   },
   "sidebar": {
     "health": "HEALTH",

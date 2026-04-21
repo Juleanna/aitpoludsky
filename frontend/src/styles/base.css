@@ -127,6 +127,28 @@ input, select, textarea { font-family: inherit; color: inherit; }
 .topbar-user .avatar { width: 28px; height: 28px; font-size: 12px; }
 .topbar-user-name { font-size: 13px; font-weight: 500; color: var(--text); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+/* ── Onboarding wizard ───────────────────────────────────────── */
+.onb-steps { display: flex; align-items: center; justify-content: center; gap: 0; margin: 0 auto 28px; max-width: 720px; }
+.onb-step { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--text-3); font-size: 13px; }
+.onb-step.current { color: var(--text); }
+.onb-step.current .onb-step-circle { background: var(--accent); color: white; border-color: var(--accent); }
+.onb-step.done .onb-step-circle { background: var(--ok); color: white; border-color: var(--ok); }
+.onb-step-circle { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--line-strong); background: var(--bg-elev); display: grid; place-items: center; font-size: 12px; font-weight: 500; }
+.onb-step-label { white-space: nowrap; }
+.onb-step-line { flex: 1; height: 1px; background: var(--line); margin: 0 10px; min-width: 20px; }
+
+.onb-label { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase; margin-bottom: 6px; }
+.onb-input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--text); font-size: 14px; }
+.onb-input:focus { outline: none; border-color: var(--accent-line); }
+.onb-input-with-suffix { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); overflow: hidden; }
+.onb-input-with-suffix input { flex: 1; padding: 10px 12px; border: 0; background: transparent; color: var(--text); font-size: 14px; outline: none; font-family: var(--font-mono); }
+.onb-input-with-suffix span { padding: 10px 12px; background: var(--bg-sunken); color: var(--text-3); font-family: var(--font-mono); font-size: 12px; border-left: 1px solid var(--line); }
+
+/* Welcome-video блок на першому кроці */
+.welcome-video { aspect-ratio: 16/9; background: linear-gradient(135deg, oklch(0.3 0.05 60), oklch(0.2 0.05 40)); border-radius: var(--r-lg); position: relative; display: grid; place-items: center; color: white; overflow: hidden; margin-bottom: 24px; }
+.welcome-video-bg { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, oklch(0.3 0.05 60 / 0.5) 0 2px, transparent 2px 10px); opacity: 0.4; }
+.welcome-play { width: 56px; height: 56px; border-radius: 50%; background: oklch(1 0 0 / 0.2); backdrop-filter: blur(10px); border: 2px solid white; display: grid; place-items: center; cursor: pointer; margin: 0 auto; }
+
 /* ── Швидкі екрани (рядок під топбаром) ─────────────────────── */
 .quick-screens { display: flex; align-items: center; gap: 4px; padding: 8px 24px; background: var(--bg-sunken); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
 .quick-screens-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-3); margin-right: 10px; text-transform: uppercase; }

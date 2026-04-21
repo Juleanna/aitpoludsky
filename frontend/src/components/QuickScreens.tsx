@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 // Рядок "швидкі екрани" під топбаром — компактні chip-посилання на часті розділи.
 // Відображає підмножину меню: ключові сторінки + POS/Сад/Календар (заглушки).
 const SCREENS: { to: string; labelKey: string }[] = [
+  { to: "/onboarding", labelKey: "nav.onboarding" },
   { to: "/orders", labelKey: "nav.orders" },
   { to: "/catalog", labelKey: "nav.catalog" },
   { to: "/customers", labelKey: "nav.customers" },

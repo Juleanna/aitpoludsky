@@ -13,6 +13,7 @@ import { InboxPage } from "@/pages/InboxPage";
 import { InventoryPage } from "@/pages/InventoryPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { LoginPage } from "@/pages/LoginPage";
+import { OnboardingPage } from "@/pages/OnboardingPage";
 import { OrdersPage } from "@/pages/OrdersPage";
 import { ShopsPage } from "@/pages/ShopsPage";
 import { SignupPage } from "@/pages/SignupPage";
@@ -53,6 +54,9 @@ export function App() {
                 </RequireAuth>
               }
             >
+              {/* Онбординг — 5-кроковий setup нового магазину */}
+              <Route path="/onboarding" element={<OnboardingPage />} />
+
               {/* OVERVIEW */}
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route
