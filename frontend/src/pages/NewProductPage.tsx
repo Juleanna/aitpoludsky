@@ -53,6 +53,61 @@ function cartesianOptions(opts: Option[]): string[][] {
   return combos;
 }
 
+// Спрощена транслітерація укр/рос → лат для побудови SKU-префікса з назви.
+// Тільки нижній регістр — далі все одно .toUpperCase().
+const TRANSLIT: Record<string, string> = {
+  а: "a", б: "b", в: "v", г: "h", ґ: "g", д: "d", е: "e", є: "ie", ж: "zh",
+  з: "z", и: "y", і: "i", ї: "i", й: "i", к: "k", л: "l", м: "m", н: "n",
+  о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "kh", ц: "ts",
+  ч: "ch", ш: "sh", щ: "shch", ь: "", ю: "iu", я: "ia", ы: "y", э: "e", ъ: "",
+};
+
+function transliterate(s: string): string {
+  return s
+    .toLowerCase()
+    .split("")
+    .map((ch) => (TRANSLIT[ch] !== undefined ? TRANSLIT[ch] : ch))
+    .join("");
+}
+
+function skuBaseFromName(name: string): string {
+  const latin = transliterate(name).toUpperCase().replace(/[^A-Z0-9]+/g, "");
+  return latin.slice(0, 4) || "PROD";
+}
+
+function randomAlphanumSuffix(len: number): string {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // без I/O/1/0 — менше плутанини
+  let out = "";
+  for (let i = 0; i < len; i++) {
+    out += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+  }
+  return out;
+}
+
+// Згенерувати SKU, якого немає серед існуючих. Якщо 8 спроб мало —
+// додаємо timestamp-шматок (практично гарантує унікальність).
+function generateUniqueSku(name: string, taken: Set<string>): string {
+  const base = skuBaseFromName(name);
+  for (let i = 0; i < 8; i++) {
+    const candidate = `${base}-${randomAlphanumSuffix(4)}`;
+    if (!taken.has(candidate)) return candidate;
+  }
+  return `${base}-${randomAlphanumSuffix(4)}-${Date.now().toString(36).toUpperCase().slice(-3)}`;
+}
+
+// Згенерувати EAN-13: 12 випадкових цифр + контрольна (алгоритм GS1).
+function generateEan13(): string {
+  let digits = "";
+  for (let i = 0; i < 12; i++) digits += Math.floor(Math.random() * 10);
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    const d = Number(digits[i]);
+    sum += i % 2 === 0 ? d : d * 3;
+  }
+  const check = (10 - (sum % 10)) % 10;
+  return digits + check;
+}
+
 function buildVariants(opts: Option[], basePrice: string, baseSku: string): Variant[] {
   const combos = cartesianOptions(opts);
   return combos.map((combo) => {
@@ -100,6 +155,13 @@ export function NewProductPage() {
   const [vat, setVat] = useState<ProductVatStatus>("none");
   const [stock, setStock] = useState("10");
   const [sku, setSku] = useState("");
+  // skuTouched — користувач щось ввів у SKU руками. Поки false,
+  // автогенеруємо SKU з назви. Ручний ввід або кнопка «regenerate»
+  // відключають авто-підставляння.
+  const [skuTouched, setSkuTouched] = useState(false);
+  // Набір уже зайнятих SKU (витягуємо з listProducts активного магазину),
+  // щоб генерувати значення, які гарантовано унікальні.
+  const [existingSkus, setExistingSkus] = useState<Set<string>>(new Set());
   const [barcode, setBarcode] = useState("");
   const [weight, setWeight] = useState("");
 
@@ -229,6 +291,38 @@ export function NewProductPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Завантажуємо існуючі SKU магазину — для перевірки унікальності при
+  // автогенерації. Витягуємо лише sku-поля (окремого light-endpoint немає —
+  // listProducts віддає все, але для форми нового товару це прийнятно).
+  useEffect(() => {
+    if (!activeShop) return;
+    let cancelled = false;
+    void catalogApi
+      .listProducts(activeShop.slug)
+      .then((rows) => {
+        if (cancelled) return;
+        setExistingSkus(new Set(rows.map((r) => r.sku).filter(Boolean)));
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setExistingSkus(new Set());
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeShop?.slug]);
+
+  // Авто-підставляння SKU при зміні назви, поки користувач не редагував поле.
+  useEffect(() => {
+    if (skuTouched) return;
+    if (!name.trim()) {
+      setSku("");
+      return;
+    }
+    setSku(generateUniqueSku(name, existingSkus));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, existingSkus]);
 
   // Підвантажуємо категорії поточного магазину. При перемиканні магазину —
   // скидаємо вибраний id (щоб не лишився id з іншого магазину).
@@ -631,20 +725,59 @@ export function NewProductPage() {
                   onChange={(e) => setStock(e.target.value)}
                 />
               </Field>
-              <Field label={t("newProduct.fields.sku")}>
-                <input
-                  className="onb-input mono"
-                  value={sku}
-                  required
-                  onChange={(e) => setSku(e.target.value.toUpperCase())}
-                />
+              <Field
+                label={t("newProduct.fields.sku")}
+                hint={
+                  sku && existingSkus.has(sku)
+                    ? t("newProduct.fields.skuTaken")
+                    : !skuTouched && sku
+                      ? t("newProduct.fields.skuAuto")
+                      : undefined
+                }
+              >
+                <div style={{ display: "flex", gap: 6 }}>
+                  <input
+                    className="onb-input mono"
+                    value={sku}
+                    required
+                    onChange={(e) => {
+                      setSku(e.target.value.toUpperCase());
+                      setSkuTouched(true);
+                    }}
+                    style={{ flex: 1, minWidth: 0 }}
+                  />
+                  <button
+                    type="button"
+                    className="btn ghost icon"
+                    onClick={() => {
+                      setSku(generateUniqueSku(name, existingSkus));
+                      setSkuTouched(true);
+                    }}
+                    aria-label={t("newProduct.fields.skuGenerate")}
+                    title={t("newProduct.fields.skuGenerate")}
+                  >
+                    <Icon name="sparkle" size={14} />
+                  </button>
+                </div>
               </Field>
               <Field label={t("newProduct.fields.barcode")}>
-                <input
-                  className="onb-input mono"
-                  value={barcode}
-                  onChange={(e) => setBarcode(e.target.value)}
-                />
+                <div style={{ display: "flex", gap: 6 }}>
+                  <input
+                    className="onb-input mono"
+                    value={barcode}
+                    onChange={(e) => setBarcode(e.target.value)}
+                    style={{ flex: 1, minWidth: 0 }}
+                  />
+                  <button
+                    type="button"
+                    className="btn ghost icon"
+                    onClick={() => setBarcode(generateEan13())}
+                    aria-label={t("newProduct.fields.barcodeGenerate")}
+                    title={t("newProduct.fields.barcodeGenerate")}
+                  >
+                    <Icon name="sparkle" size={14} />
+                  </button>
+                </div>
               </Field>
               <Field label={t("newProduct.fields.weight")}>
                 <input

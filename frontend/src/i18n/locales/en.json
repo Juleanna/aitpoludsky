@@ -353,7 +353,11 @@
       "stock": "Stock",
       "stockDaysUnit": "days",
       "sku": "SKU",
+      "skuAuto": "auto-generated · click ✨ for a new one",
+      "skuTaken": "SKU already exists — generate a new one",
+      "skuGenerate": "Generate SKU",
       "barcode": "Barcode",
+      "barcodeGenerate": "Generate EAN-13",
       "weight": "Weight, g"
     },
     "vat": { "none": "No VAT", "v20": "VAT 20%", "v7": "VAT 7%" },

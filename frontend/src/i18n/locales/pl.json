@@ -353,7 +353,11 @@
       "stock": "Stan",
       "stockDaysUnit": "dni",
       "sku": "SKU",
+      "skuAuto": "wygenerowano automatycznie · kliknij ✨ aby odświeżyć",
+      "skuTaken": "SKU już istnieje — wygeneruj nowe",
+      "skuGenerate": "Wygeneruj SKU",
       "barcode": "Kod kreskowy",
+      "barcodeGenerate": "Wygeneruj EAN-13",
       "weight": "Waga, g"
     },
     "vat": { "none": "Bez VAT", "v20": "VAT 20%", "v7": "VAT 7%" },

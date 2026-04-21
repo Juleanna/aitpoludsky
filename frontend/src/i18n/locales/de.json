@@ -353,7 +353,11 @@
       "stock": "Bestand",
       "stockDaysUnit": "Tage",
       "sku": "SKU",
+      "skuAuto": "automatisch generiert · klicke ✨ für ein neues",
+      "skuTaken": "SKU existiert bereits — ein neues generieren",
+      "skuGenerate": "SKU generieren",
       "barcode": "Barcode",
+      "barcodeGenerate": "EAN-13 generieren",
       "weight": "Gewicht, g"
     },
     "vat": { "none": "Ohne MwSt.", "v20": "MwSt. 20%", "v7": "MwSt. 7%" },
