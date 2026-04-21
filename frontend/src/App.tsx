@@ -10,6 +10,7 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { DiscountsPage } from "@/pages/DiscountsPage";
 import { InboxPage } from "@/pages/InboxPage";
 import { InventoryPage } from "@/pages/InventoryPage";
+import { LandingPage } from "@/pages/LandingPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { OrdersPage } from "@/pages/OrdersPage";
 import { ShopsPage } from "@/pages/ShopsPage";
@@ -23,6 +24,9 @@ export function App() {
       <AuthProvider>
         <ShopProvider>
           <Routes>
+            {/* Публічні роути — лендинг, storefront, форми входу */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/s/:shopSlug" element={<StorefrontPublicPage />} />
             <Route
               path="/login"
               element={
@@ -39,7 +43,8 @@ export function App() {
                 </RequireGuest>
               }
             />
-            <Route path="/s/:shopSlug" element={<StorefrontPublicPage />} />
+
+            {/* Приватна частина (потребує авторизації + обгорнута у Shell) */}
             <Route
               element={
                 <RequireAuth>
@@ -47,7 +52,7 @@ export function App() {
                 </RequireAuth>
               }
             >
-              <Route path="/" element={<DashboardPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/orders" element={<OrdersPage />} />
               <Route path="/catalog" element={<CatalogPage />} />
               <Route path="/customers" element={<CustomersPage />} />
@@ -57,6 +62,7 @@ export function App() {
               <Route path="/storefront" element={<StorefrontAdminPage />} />
               <Route path="/shops" element={<ShopsPage />} />
             </Route>
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </ShopProvider>

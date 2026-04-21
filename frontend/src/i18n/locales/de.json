@@ -1,5 +1,80 @@
 {
   "app": { "name": "aitpoludsky", "tagline": "SaaS" },
+  "landing": {
+    "nav": {
+      "features": "Funktionen",
+      "howItWorks": "So funktioniert's",
+      "translations": "Sprachen",
+      "login": "Anmelden",
+      "signup": "Registrieren",
+      "dashboard": "Mein Projekt"
+    },
+    "hero": {
+      "badge": "Multi-Tenant E-Commerce SaaS",
+      "titleBefore": "Starten Sie",
+      "titleAccent": "Ihren Shop",
+      "titleAfter": "in 10 Minuten",
+      "subtitle": "Vollwertige E-Commerce-Plattform mit mehrsprachiger Shopfront, Bestellungen, Lager, Rabatten und öffentlicher Seite — ohne Plugins.",
+      "primaryCta": "Konto erstellen",
+      "secondaryCta": "Anmelden",
+      "trust1": "Session-Authentifizierung",
+      "trust2": "Multi-Tenant ab Tag 1",
+      "trust3": "4 Shopfront-Sprachen"
+    },
+    "features": {
+      "tag": "WAS DRIN IST",
+      "titleBefore": "Alles, um zu verkaufen,",
+      "titleAccent": "schon dabei",
+      "lede": "Keine externen Dienste für Katalog, Bestellungen, Lager oder Nachrichten — alles läuft ab Werk.",
+      "catalogTitle": "Katalog mit Übersetzungen",
+      "catalogDesc": "Produktnamen und -beschreibungen in jeder konfigurierten Sprache.",
+      "ordersTitle": "Bestellungen mit Historie",
+      "ordersDesc": "Produkt-Snapshots, Status, Kanäle (Online / POS / Manuell), Auto-Nummerierung.",
+      "customersTitle": "Kunden & LTV",
+      "customersDesc": "Stufen (Bronze → Platinum), Aggregate, Bestellverknüpfung.",
+      "inventoryTitle": "Lager, das nicht lügt",
+      "inventoryDesc": "Eingänge, Ausgänge, Abschreibungen, Korrekturen. Atomare Updates, unveränderliche Historie.",
+      "discountsTitle": "Rabatte & Promo-Codes",
+      "discountsDesc": "Prozente oder Festbeträge, Datumsfenster, Nutzungslimits — Regeln überall berücksichtigt.",
+      "storefrontTitle": "Öffentliche Shopfront",
+      "storefrontDesc": "Eigener Link, nur aktive Produkte mit Bestand werden angezeigt."
+    },
+    "i18n": {
+      "tag": "MEHRSPRACHIG",
+      "titleBefore": "Ein Shop,",
+      "titleAccent": "viele Sprachen",
+      "lede": "Jeder Shop wählt seine Sprachen für Produktbeschreibungen. Kunden lesen in ihrer Sprache — ohne Google Translate.",
+      "point1": "Pro Shop konfigurierbar",
+      "point2": "Fallback auf Standardsprache"
+    },
+    "stats": {
+      "launchUnit": "Min.",
+      "launchLabel": "Shop-Start",
+      "languagesLabel": "Shopfront-Sprachen",
+      "freeValue": "€0",
+      "freeLabel": "Zum Start",
+      "tenantsLabel": "Shops pro Konto"
+    },
+    "howItWorks": {
+      "tag": "SO FUNKTIONIERT'S",
+      "titleBefore": "Drei",
+      "titleAccent": "einfache Schritte",
+      "lede": "Keine technischen Kenntnisse — nur das, was Sie zum Verkaufen brauchen.",
+      "step1Title": "Registrieren",
+      "step1Desc": "E-Mail und Passwort. Keine Kartenbestätigungen oder Abos zum Start.",
+      "step2Title": "Shop einrichten",
+      "step2Desc": "Name, Währung, Standardsprache, zusätzliche Sprachen für Produkte.",
+      "step3Title": "Verkaufen starten",
+      "step3Desc": "Produkte hinzufügen, öffentlichen Link teilen — der Shop läuft."
+    },
+    "finalCta": {
+      "title": "Bereit, loszulegen?",
+      "subtitle": "Erstellen Sie jetzt Ihren ersten Shop — kostenlos."
+    },
+    "footer": {
+      "copyright": "© {{year}} aitpoludsky · ukrainisches E-Commerce SaaS"
+    }
+  },
   "nav": {
     "dashboard": "Übersicht",
     "orders": "Bestellungen",

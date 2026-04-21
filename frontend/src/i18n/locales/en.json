@@ -1,5 +1,80 @@
 {
   "app": { "name": "aitpoludsky", "tagline": "SaaS" },
+  "landing": {
+    "nav": {
+      "features": "Features",
+      "howItWorks": "How it works",
+      "translations": "Languages",
+      "login": "Sign in",
+      "signup": "Sign up",
+      "dashboard": "My project"
+    },
+    "hero": {
+      "badge": "Multi-tenant e-commerce SaaS",
+      "titleBefore": "Launch",
+      "titleAccent": "your shop",
+      "titleAfter": "in 10 minutes",
+      "subtitle": "Full e-commerce platform with multilingual storefront, orders, inventory, discounts and a public page — no plugins required.",
+      "primaryCta": "Create account",
+      "secondaryCta": "Sign in",
+      "trust1": "Session auth",
+      "trust2": "Multi-tenant from day one",
+      "trust3": "4 storefront languages"
+    },
+    "features": {
+      "tag": "WHAT'S INSIDE",
+      "titleBefore": "Everything you need to sell —",
+      "titleAccent": "already here",
+      "lede": "No extra services for catalog, orders, inventory or messages — it all ships with the box.",
+      "catalogTitle": "Catalog with translations",
+      "catalogDesc": "Product names and descriptions in each configured language — customers see theirs.",
+      "ordersTitle": "Orders with history",
+      "ordersDesc": "Product snapshots, statuses, channels (Online / POS / Manual), auto-numbering.",
+      "customersTitle": "Customers & LTV",
+      "customersDesc": "Tiers (Bronze → Platinum), aggregates, order linkage.",
+      "inventoryTitle": "Inventory that stays honest",
+      "inventoryDesc": "Receipts, issues, write-offs, adjustments. Atomic updates, immutable history.",
+      "discountsTitle": "Discounts & promo codes",
+      "discountsDesc": "Percentages or flat amounts, date windows, usage caps — rules respected everywhere.",
+      "storefrontTitle": "Public storefront",
+      "storefrontDesc": "Dedicated link, only active products with stock are shown."
+    },
+    "i18n": {
+      "tag": "MULTILINGUAL",
+      "titleBefore": "One shop,",
+      "titleAccent": "many languages",
+      "lede": "Each shop picks its own languages for product descriptions. Customers read in their own language — no Google Translate.",
+      "point1": "Configured per shop",
+      "point2": "Fallback to default language"
+    },
+    "stats": {
+      "launchUnit": "min",
+      "launchLabel": "Shop launch",
+      "languagesLabel": "Storefront languages",
+      "freeValue": "$0",
+      "freeLabel": "To start",
+      "tenantsLabel": "Shops per account"
+    },
+    "howItWorks": {
+      "tag": "HOW IT WORKS",
+      "titleBefore": "Three",
+      "titleAccent": "simple steps",
+      "lede": "No technical skills required — just what you need to start selling.",
+      "step1Title": "Sign up",
+      "step1Desc": "Email + password. No card confirmations or subscriptions to begin.",
+      "step2Title": "Configure shop",
+      "step2Desc": "Name, currency, default language, additional languages for products.",
+      "step3Title": "Start selling",
+      "step3Desc": "Add products, share your public link — the shop is live."
+    },
+    "finalCta": {
+      "title": "Ready to begin?",
+      "subtitle": "Create your first shop right now — it's free."
+    },
+    "footer": {
+      "copyright": "© {{year}} aitpoludsky · Ukrainian e-commerce SaaS"
+    }
+  },
   "nav": {
     "dashboard": "Dashboard",
     "orders": "Orders",

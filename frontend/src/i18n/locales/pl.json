@@ -1,5 +1,80 @@
 {
   "app": { "name": "aitpoludsky", "tagline": "SaaS" },
+  "landing": {
+    "nav": {
+      "features": "Funkcje",
+      "howItWorks": "Jak to działa",
+      "translations": "Języki",
+      "login": "Zaloguj",
+      "signup": "Rejestracja",
+      "dashboard": "Mój projekt"
+    },
+    "hero": {
+      "badge": "SaaS e-commerce multi-tenant",
+      "titleBefore": "Uruchom",
+      "titleAccent": "swój sklep",
+      "titleAfter": "w 10 minut",
+      "subtitle": "Pełnoprawna platforma e-commerce z wielojęzyczną witryną, zamówieniami, magazynem, rabatami i stroną publiczną — bez dodatków.",
+      "primaryCta": "Utwórz konto",
+      "secondaryCta": "Zaloguj się",
+      "trust1": "Uwierzytelnianie sesyjne",
+      "trust2": "Multi-tenant od pierwszego dnia",
+      "trust3": "4 języki witryny"
+    },
+    "features": {
+      "tag": "CO W ŚRODKU",
+      "titleBefore": "Wszystko, by sprzedawać,",
+      "titleAccent": "już jest",
+      "lede": "Bez zewnętrznych usług dla katalogu, zamówień, magazynu czy wiadomości — wszystko działa od razu.",
+      "catalogTitle": "Katalog z tłumaczeniami",
+      "catalogDesc": "Nazwy i opisy produktów w każdym skonfigurowanym języku.",
+      "ordersTitle": "Zamówienia z historią",
+      "ordersDesc": "Snapshoty produktów, statusy, kanały (Online / POS / Ręcznie), autonumeracja.",
+      "customersTitle": "Klienci i LTV",
+      "customersDesc": "Poziomy (Bronze → Platinum), agregaty, powiązania zamówień.",
+      "inventoryTitle": "Magazyn, który nie kłamie",
+      "inventoryDesc": "Przyjęcia, wydania, odpisy, korekty. Operacje atomowe, niezmienna historia.",
+      "discountsTitle": "Rabaty i kody promo",
+      "discountsDesc": "Procenty lub kwoty stałe, okna dat, limity użyć — reguły wszędzie respektowane.",
+      "storefrontTitle": "Witryna publiczna",
+      "storefrontDesc": "Osobny link, pokazywane są tylko aktywne produkty ze stanem."
+    },
+    "i18n": {
+      "tag": "WIELOJĘZYCZNOŚĆ",
+      "titleBefore": "Jeden sklep,",
+      "titleAccent": "wiele języków",
+      "lede": "Każdy sklep wybiera własne języki opisów. Klient czyta w swoim języku — bez Google Translate.",
+      "point1": "Konfiguracja na poziomie sklepu",
+      "point2": "Fallback na język domyślny"
+    },
+    "stats": {
+      "launchUnit": "min",
+      "launchLabel": "Uruchomienie sklepu",
+      "languagesLabel": "Języki witryny",
+      "freeValue": "0 zł",
+      "freeLabel": "Na start",
+      "tenantsLabel": "Sklepów na konto"
+    },
+    "howItWorks": {
+      "tag": "JAK TO DZIAŁA",
+      "titleBefore": "Trzy",
+      "titleAccent": "proste kroki",
+      "lede": "Bez wiedzy technicznej — tylko to, co potrzebne, aby zacząć sprzedawać.",
+      "step1Title": "Rejestracja",
+      "step1Desc": "E-mail i hasło. Bez potwierdzeń kart i subskrypcji na start.",
+      "step2Title": "Konfiguracja sklepu",
+      "step2Desc": "Nazwa, waluta, język domyślny, dodatkowe języki dla produktów.",
+      "step3Title": "Zacznij sprzedawać",
+      "step3Desc": "Dodaj produkty, udostępnij publiczny link — sklep działa."
+    },
+    "finalCta": {
+      "title": "Gotowy, by zacząć?",
+      "subtitle": "Utwórz swój pierwszy sklep już teraz — to darmowe."
+    },
+    "footer": {
+      "copyright": "© {{year}} aitpoludsky · ukraiński SaaS e-commerce"
+    }
+  },
   "nav": {
     "dashboard": "Panel",
     "orders": "Zamówienia",

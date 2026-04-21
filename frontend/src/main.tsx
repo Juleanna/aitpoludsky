@@ -6,6 +6,7 @@ import "./i18n";
 import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/overlay.css";
+import "./styles/landing.css";
 
 const rootEl = document.getElementById("app");
 if (!rootEl) throw new Error("#app element not found");

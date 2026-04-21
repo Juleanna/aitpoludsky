@@ -21,7 +21,7 @@ export function SignupPage() {
     setBusy(true);
     try {
       await signup({ email, password, full_name: fullName });
-      navigate("/", { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       if (err instanceof ApiError && err.status === 400) {
         const body = err.body as Record<string, string[]> | null;

@@ -20,7 +20,7 @@ export function LoginPage() {
     setBusy(true);
     try {
       await login(email, password);
-      navigate("/", { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         setError(t("auth.invalidCredentials"));
