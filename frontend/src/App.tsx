@@ -15,6 +15,7 @@ import { InboxPage } from "@/pages/InboxPage";
 import { InventoryPage } from "@/pages/InventoryPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { LoginPage } from "@/pages/LoginPage";
+import { NewProductPage } from "@/pages/NewProductPage";
 import { OnboardingPage } from "@/pages/OnboardingPage";
 import { OrdersPage } from "@/pages/OrdersPage";
 import { ShopsPage } from "@/pages/ShopsPage";
@@ -74,6 +75,7 @@ export function App() {
                 {/* ПРОДАЖ */}
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/catalog" element={<CatalogPage />} />
+                <Route path="/catalog/new" element={<NewProductPage />} />
                 <Route path="/customers" element={<CustomersPage />} />
                 <Route path="/discounts" element={<DiscountsPage />} />
                 <Route

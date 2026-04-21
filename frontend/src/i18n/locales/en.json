@@ -306,6 +306,80 @@
     "translationsHint": "Languages come from shop settings. Main fields are in the default language.",
     "noExtraLanguages": "Shop has only the default language. Add more in shop settings."
   },
+  "newProduct": {
+    "breadcrumb": "New",
+    "titleBefore": "New",
+    "titleAccent": "product",
+    "subtitle": "Add product to catalog · publish to chosen channels",
+    "draft": "Draft",
+    "publish": "Publish",
+    "sections": {
+      "basic": "Basics",
+      "media": "Media",
+      "pricing": "Price & stock",
+      "variants": "Variants",
+      "channels": "Publish to channels",
+      "seo": "SEO"
+    },
+    "fields": {
+      "name": "Product name",
+      "description": "Description",
+      "category": "Category",
+      "brand": "Brand",
+      "producer": "Manufacturer",
+      "categoryHint": "affects SEO and filters",
+      "tags": "Tags",
+      "tagPlaceholder": "add tag…",
+      "price": "Selling price",
+      "compareAt": "Compare-at price",
+      "compareAtHint": "strikethrough on card",
+      "cost": "Cost",
+      "costHint": "for margin (private)",
+      "vat": "VAT status",
+      "stock": "Stock",
+      "stockDaysUnit": "days",
+      "sku": "SKU",
+      "barcode": "Barcode",
+      "weight": "Weight, g"
+    },
+    "vat": { "none": "No VAT", "v20": "VAT 20%", "v7": "VAT 7%" },
+    "media": {
+      "hint": "Main image + up to 8 extras · drag to reorder",
+      "primary": "main",
+      "add": "Add"
+    },
+    "variants": {
+      "hint": "Sizes, roast, grind — each variant has its own SKU and stock",
+      "optionRoast": "Roast",
+      "optionWeight": "Weight",
+      "addOption": "Option",
+      "colVariant": "Variant",
+      "colPrice": "Price",
+      "colStock": "Stock",
+      "colSku": "SKU",
+      "empty": "Add an option to generate variants"
+    },
+    "channels": {
+      "webSub": "your-slug.shop",
+      "igSub": "@shop_handle",
+      "googleSub": "Shopping · free",
+      "posSub": "offline"
+    },
+    "seo": {
+      "hint": "How Google sees the product",
+      "url": "URL",
+      "metaTitle": "Meta title",
+      "metaDesc": "Meta description",
+      "chars": "chars"
+    },
+    "preview": { "title": "Card preview", "placeholderName": "Product name" },
+    "margin": {
+      "title": "Margin · forecast",
+      "price": "Price",
+      "cost": "Cost",
+      "margin": "Margin"
+    }
+  },
   "customers": {
     "title": "Customers",
     "subtitle": "Shop: {{shop}} · {{count}} customer(s)",

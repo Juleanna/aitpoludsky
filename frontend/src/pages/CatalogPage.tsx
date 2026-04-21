@@ -1,27 +1,12 @@
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { ApiError } from "@/api/client";
 import * as catalogApi from "@/api/catalog";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
-import type { Product, ProductInput, ProductTranslations } from "@/types";
+import type { Product, ProductInput } from "@/types";
 import { formatMoney } from "@/utils/format";
-
-type FormState = ProductInput & { id?: number };
-
-function emptyForm(): FormState {
-  return {
-    sku: "",
-    name: "",
-    description: "",
-    price: "0",
-    stock: 0,
-    is_active: true,
-    translations: {},
-  };
-}
 
 // Канали публікації — поки UI-only (немає бекенд-поля).
 // У майбутньому можна додати поле у Product і серіалізовувати.
@@ -38,23 +23,23 @@ const toneFor = (index: number): string => String(((index % 8) + 1));
 
 export function CatalogPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { activeShop } = useShops();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState<FormState | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   // Активні канали публікації для поточного товару в редакторі (UI-only).
   const [channels, setChannels] = useState<Set<ChannelKey>>(new Set(["web", "ig", "pos"]));
 
   const slug = activeShop?.slug ?? null;
 
-  // Глобальна подія ait:new-product (від хоткея N→P) — відкриває drawer нового товару.
+  // Глобальна подія ait:new-product (від хоткея N→P) — веде на сторінку створення.
   useEffect(() => {
-    const handler = () => setForm(emptyForm());
+    const handler = () => navigate("/catalog/new");
     window.addEventListener("ait:new-product", handler);
     return () => window.removeEventListener("ait:new-product", handler);
-  }, []);
+  }, [navigate]);
 
   const reload = useCallback(async () => {
     if (!slug) return;
@@ -125,7 +110,7 @@ export function CatalogPage() {
           <h1 className="page-title">{t("catalog.title")}</h1>
           <p className="page-sub">{t("catalog.subtitlePrototype")}</p>
         </div>
-        <button className="btn primary" onClick={() => setForm(emptyForm())}>
+        <button className="btn primary" onClick={() => navigate("/catalog/new")}>
           <Icon name="plus" size={14} /> {t("catalog.newProduct")}
         </button>
       </div>
@@ -333,249 +318,7 @@ export function CatalogPage() {
         </div>
       )}
 
-      {form && slug && (
-        <ProductDrawer
-          shopSlug={slug}
-          form={form}
-          onClose={() => setForm(null)}
-          onSaved={async () => {
-            setForm(null);
-            await reload();
-          }}
-        />
-      )}
     </div>
   );
 }
 
-type DrawerProps = {
-  shopSlug: string;
-  form: FormState;
-  onClose: () => void;
-  onSaved: () => void | Promise<void>;
-};
-
-// Drawer лишається тільки для створення нового товару.
-// Редагування вже існуючих — inline у таблиці / у живому редакторі.
-function ProductDrawer({ shopSlug, form, onClose, onSaved }: DrawerProps) {
-  const { t } = useTranslation();
-  const { activeShop } = useShops();
-  const [state, setState] = useState<FormState>(form);
-  const [busy, setBusy] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const isEdit = form.id !== undefined;
-
-  const defaultLang = activeShop?.default_language ?? "uk";
-  const extraLangs = useMemo(
-    () => (activeShop?.languages ?? []).filter((l) => l !== defaultLang),
-    [activeShop, defaultLang],
-  );
-  const [activeTab, setActiveTab] = useState<string>(defaultLang);
-
-  function patch<K extends keyof FormState>(key: K, value: FormState[K]) {
-    setState((s) => ({ ...s, [key]: value }));
-  }
-  function patchTranslation(lang: string, field: "name" | "description", value: string) {
-    setState((s) => {
-      const next: ProductTranslations = { ...(s.translations ?? {}) };
-      next[lang] = { ...(next[lang] ?? {}), [field]: value };
-      return { ...s, translations: next };
-    });
-  }
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setFieldErrors({});
-    try {
-      const translations: ProductTranslations = {};
-      for (const [lang, entry] of Object.entries(state.translations ?? {})) {
-        if (lang === defaultLang) continue;
-        const cleaned: { name?: string; description?: string } = {};
-        if (entry.name?.trim()) cleaned.name = entry.name;
-        if (entry.description?.trim()) cleaned.description = entry.description;
-        if (cleaned.name || cleaned.description) translations[lang] = cleaned;
-      }
-      const payload: ProductInput = {
-        sku: state.sku,
-        name: state.name,
-        description: state.description ?? "",
-        price: state.price,
-        stock: Number(state.stock),
-        is_active: state.is_active,
-        translations,
-      };
-      if (isEdit && state.id !== undefined) {
-        await catalogApi.updateProduct(shopSlug, state.id, payload);
-      } else {
-        await catalogApi.createProduct(shopSlug, payload);
-      }
-      await onSaved();
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 400) {
-        const body = (err.body ?? {}) as Record<string, unknown>;
-        const errs: Record<string, string> = {};
-        for (const [k, v] of Object.entries(body)) {
-          if (Array.isArray(v) && typeof v[0] === "string") errs[k] = v[0];
-          else if (typeof v === "string") errs[k] = v;
-        }
-        setFieldErrors(errs);
-      } else {
-        setFieldErrors({ _: t("orders.saveError") });
-      }
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  const langTabs = [defaultLang, ...extraLangs];
-
-  return (
-    <div className="drawer-backdrop" onClick={onClose}>
-      <aside className="drawer" onClick={(e) => e.stopPropagation()}>
-        <header className="drawer-head">
-          <h2 className="serif" style={{ margin: 0, fontSize: 24, fontStyle: "italic" }}>
-            {t("catalog.newProduct")}
-          </h2>
-          <button className="btn ghost icon" onClick={onClose} aria-label={t("common.close")}>
-            ×
-          </button>
-        </header>
-        <form onSubmit={handleSubmit} className="drawer-body">
-          <FormField label={t("catalog.sku")} error={fieldErrors.sku}>
-            <input
-              value={state.sku}
-              required
-              onChange={(e) => patch("sku", e.target.value)}
-              style={{ ...inputStyle, fontFamily: "var(--font-mono)" }}
-            />
-          </FormField>
-
-          <div>
-            <div className="tab-bar" style={{ display: "flex", gap: 2, borderBottom: "1px solid var(--line)", marginBottom: 14 }}>
-              {langTabs.map((lang) => (
-                <button
-                  key={lang}
-                  type="button"
-                  className={activeTab === lang ? "active" : ""}
-                  onClick={() => setActiveTab(lang)}
-                  style={{
-                    padding: "8px 14px",
-                    borderBottom: `2px solid ${activeTab === lang ? "var(--accent)" : "transparent"}`,
-                    color: activeTab === lang ? "var(--text)" : "var(--text-3)",
-                    fontSize: 13,
-                  }}
-                >
-                  {t(`languages.${lang}`)} {lang === defaultLang && "·"}
-                </button>
-              ))}
-            </div>
-            {activeTab === defaultLang ? (
-              <>
-                <FormField label={t("catalog.name")} error={fieldErrors.name}>
-                  <input value={state.name} required onChange={(e) => patch("name", e.target.value)} style={inputStyle} />
-                </FormField>
-                <FormField label={t("catalog.description")} error={fieldErrors.description}>
-                  <textarea
-                    value={state.description ?? ""}
-                    rows={3}
-                    onChange={(e) => patch("description", e.target.value)}
-                    style={inputStyle}
-                  />
-                </FormField>
-              </>
-            ) : (
-              <>
-                <div style={{ fontSize: 11, color: "var(--text-3)", marginBottom: 10 }}>
-                  {t("catalog.translationsHint")}
-                </div>
-                <FormField label={t("catalog.name")}>
-                  <input
-                    value={state.translations?.[activeTab]?.name ?? ""}
-                    onChange={(e) => patchTranslation(activeTab, "name", e.target.value)}
-                    style={inputStyle}
-                  />
-                </FormField>
-                <FormField label={t("catalog.description")}>
-                  <textarea
-                    value={state.translations?.[activeTab]?.description ?? ""}
-                    rows={3}
-                    onChange={(e) => patchTranslation(activeTab, "description", e.target.value)}
-                    style={inputStyle}
-                  />
-                </FormField>
-              </>
-            )}
-            {extraLangs.length === 0 && (
-              <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 6 }}>{t("catalog.noExtraLanguages")}</div>
-            )}
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            <FormField label={t("catalog.price")} error={fieldErrors.price}>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                value={state.price}
-                required
-                onChange={(e) => patch("price", e.target.value)}
-                style={{ ...inputStyle, fontFamily: "var(--font-mono)" }}
-              />
-            </FormField>
-            <FormField label={t("catalog.stock")} error={fieldErrors.stock}>
-              <input
-                type="number"
-                min="0"
-                value={state.stock}
-                required
-                onChange={(e) => patch("stock", Number(e.target.value))}
-                style={{ ...inputStyle, fontFamily: "var(--font-mono)" }}
-              />
-            </FormField>
-          </div>
-          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
-            <input
-              type="checkbox"
-              checked={state.is_active ?? true}
-              onChange={(e) => patch("is_active", e.target.checked)}
-            />
-            {t("catalog.isActive")}
-          </label>
-          {fieldErrors._ && <div style={{ color: "var(--err)", fontSize: 12 }}>{fieldErrors._}</div>}
-          {fieldErrors.translations && <div style={{ color: "var(--err)", fontSize: 12 }}>{fieldErrors.translations}</div>}
-          <footer className="drawer-foot">
-            <button type="button" className="btn" onClick={onClose}>
-              {t("common.cancel")}
-            </button>
-            <button type="submit" className="btn accent" disabled={busy}>
-              {busy ? t("common.saving") : t("common.save")}
-            </button>
-          </footer>
-        </form>
-      </aside>
-    </div>
-  );
-}
-
-function FormField({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
-  return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <span className="mono" style={{ fontSize: 10, letterSpacing: "0.1em", color: "var(--text-3)" }}>
-        {label.toUpperCase()}
-      </span>
-      {children}
-      {error && <span style={{ fontSize: 12, color: "var(--err)" }}>{error}</span>}
-    </label>
-  );
-}
-
-const inputStyle: React.CSSProperties = {
-  padding: "9px 11px",
-  border: "1px solid var(--line)",
-  borderRadius: "var(--r-sm)",
-  background: "var(--bg)",
-  color: "var(--text)",
-  fontSize: 14,
-  width: "100%",
-};

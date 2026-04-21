@@ -306,6 +306,80 @@
     "translationsHint": "Języki pochodzą z ustawień sklepu. Główne pola są w języku domyślnym.",
     "noExtraLanguages": "Sklep ma tylko język domyślny. Dodaj więcej w ustawieniach."
   },
+  "newProduct": {
+    "breadcrumb": "Nowy",
+    "titleBefore": "Nowy",
+    "titleAccent": "produkt",
+    "subtitle": "Dodaj produkt do katalogu · opublikuj w wybranych kanałach",
+    "draft": "Szkic",
+    "publish": "Opublikuj",
+    "sections": {
+      "basic": "Podstawowe",
+      "media": "Media",
+      "pricing": "Cena i stan",
+      "variants": "Warianty",
+      "channels": "Publikuj w kanałach",
+      "seo": "SEO"
+    },
+    "fields": {
+      "name": "Nazwa produktu",
+      "description": "Opis",
+      "category": "Kategoria",
+      "brand": "Marka",
+      "producer": "Producent",
+      "categoryHint": "wpływa na SEO i filtry",
+      "tags": "Tagi",
+      "tagPlaceholder": "dodaj tag…",
+      "price": "Cena sprzedaży",
+      "compareAt": "Cena przed rabatem",
+      "compareAtHint": "przekreślona na karcie",
+      "cost": "Koszt",
+      "costHint": "do marży (prywatne)",
+      "vat": "Status VAT",
+      "stock": "Stan",
+      "stockDaysUnit": "dni",
+      "sku": "SKU",
+      "barcode": "Kod kreskowy",
+      "weight": "Waga, g"
+    },
+    "vat": { "none": "Bez VAT", "v20": "VAT 20%", "v7": "VAT 7%" },
+    "media": {
+      "hint": "Główne zdjęcie + do 8 dodatkowych · przeciągnij, by zmienić kolejność",
+      "primary": "główne",
+      "add": "Dodaj"
+    },
+    "variants": {
+      "hint": "Rozmiary, palenie, mielenie — każdy wariant ma własne SKU i stan",
+      "optionRoast": "Palenie",
+      "optionWeight": "Waga",
+      "addOption": "Opcja",
+      "colVariant": "Wariant",
+      "colPrice": "Cena",
+      "colStock": "Stan",
+      "colSku": "SKU",
+      "empty": "Dodaj opcję, aby wygenerować warianty"
+    },
+    "channels": {
+      "webSub": "twój-slug.shop",
+      "igSub": "@shop_handle",
+      "googleSub": "Shopping · darmowe",
+      "posSub": "offline"
+    },
+    "seo": {
+      "hint": "Jak produkt widzi Google",
+      "url": "URL",
+      "metaTitle": "Meta title",
+      "metaDesc": "Meta description",
+      "chars": "znaków"
+    },
+    "preview": { "title": "Podgląd karty", "placeholderName": "Nazwa produktu" },
+    "margin": {
+      "title": "Marża · prognoza",
+      "price": "Cena",
+      "cost": "Koszt",
+      "margin": "Marża"
+    }
+  },
   "customers": {
     "title": "Klienci",
     "subtitle": "Sklep: {{shop}} · {{count}} klient(ów)",

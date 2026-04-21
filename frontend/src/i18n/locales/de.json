@@ -306,6 +306,80 @@
     "translationsHint": "Sprachen kommen aus den Shop-Einstellungen. Hauptfelder sind in der Standardsprache.",
     "noExtraLanguages": "Shop hat nur die Standardsprache. Weitere in den Shop-Einstellungen hinzufügen."
   },
+  "newProduct": {
+    "breadcrumb": "Neu",
+    "titleBefore": "Neues",
+    "titleAccent": "Produkt",
+    "subtitle": "Produkt zum Katalog hinzufügen · in Kanälen veröffentlichen",
+    "draft": "Entwurf",
+    "publish": "Veröffentlichen",
+    "sections": {
+      "basic": "Basis",
+      "media": "Medien",
+      "pricing": "Preis & Bestand",
+      "variants": "Varianten",
+      "channels": "In Kanälen veröffentlichen",
+      "seo": "SEO"
+    },
+    "fields": {
+      "name": "Produktname",
+      "description": "Beschreibung",
+      "category": "Kategorie",
+      "brand": "Marke",
+      "producer": "Hersteller",
+      "categoryHint": "wirkt auf SEO und Filter",
+      "tags": "Tags",
+      "tagPlaceholder": "Tag hinzufügen…",
+      "price": "Verkaufspreis",
+      "compareAt": "Preis vor Rabatt",
+      "compareAtHint": "durchgestrichen auf Karte",
+      "cost": "Einkauf",
+      "costHint": "für Marge (privat)",
+      "vat": "MwSt.-Status",
+      "stock": "Bestand",
+      "stockDaysUnit": "Tage",
+      "sku": "SKU",
+      "barcode": "Barcode",
+      "weight": "Gewicht, g"
+    },
+    "vat": { "none": "Ohne MwSt.", "v20": "MwSt. 20%", "v7": "MwSt. 7%" },
+    "media": {
+      "hint": "Hauptbild + bis zu 8 weitere · Reihenfolge per Drag",
+      "primary": "Haupt",
+      "add": "Hinzufügen"
+    },
+    "variants": {
+      "hint": "Größen, Röstung, Mahlung — jede Variante hat eigene SKU und Bestand",
+      "optionRoast": "Röstung",
+      "optionWeight": "Gewicht",
+      "addOption": "Option",
+      "colVariant": "Variante",
+      "colPrice": "Preis",
+      "colStock": "Bestand",
+      "colSku": "SKU",
+      "empty": "Option hinzufügen, um Varianten zu erzeugen"
+    },
+    "channels": {
+      "webSub": "dein-slug.shop",
+      "igSub": "@shop_handle",
+      "googleSub": "Shopping · kostenlos",
+      "posSub": "offline"
+    },
+    "seo": {
+      "hint": "Wie Google das Produkt sieht",
+      "url": "URL",
+      "metaTitle": "Meta title",
+      "metaDesc": "Meta description",
+      "chars": "Zeichen"
+    },
+    "preview": { "title": "Karten-Vorschau", "placeholderName": "Produktname" },
+    "margin": {
+      "title": "Marge · Prognose",
+      "price": "Preis",
+      "cost": "Einkauf",
+      "margin": "Marge"
+    }
+  },
   "customers": {
     "title": "Kunden",
     "subtitle": "Shop: {{shop}} · {{count}} Kunde(n)",

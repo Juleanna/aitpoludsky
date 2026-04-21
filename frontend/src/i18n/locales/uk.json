@@ -306,6 +306,80 @@
     "translationsHint": "Мови беруться з налаштувань магазину. Основні поля — мовою за замовчуванням.",
     "noExtraLanguages": "Магазин має лише мову за замовчуванням. Додайте інші у налаштуваннях магазину."
   },
+  "newProduct": {
+    "breadcrumb": "Новий",
+    "titleBefore": "Новий",
+    "titleAccent": "товар",
+    "subtitle": "Додай товар до каталогу · опублікуй в обрані канали",
+    "draft": "Чернетка",
+    "publish": "Опублікувати",
+    "sections": {
+      "basic": "Основне",
+      "media": "Медіа",
+      "pricing": "Ціна та запас",
+      "variants": "Варіанти",
+      "channels": "Публікувати в каналах",
+      "seo": "SEO"
+    },
+    "fields": {
+      "name": "Назва товару",
+      "description": "Опис",
+      "category": "Категорія",
+      "brand": "Бренд",
+      "producer": "Виробник",
+      "categoryHint": "впливає на SEO та фільтри",
+      "tags": "Теги",
+      "tagPlaceholder": "додати тег…",
+      "price": "Ціна продажу",
+      "compareAt": "Ціна до знижки",
+      "compareAtHint": "перекреслюється на картці",
+      "cost": "Собівартість",
+      "costHint": "для маржі (приватне)",
+      "vat": "Статус ПДВ",
+      "stock": "Запас",
+      "stockDaysUnit": "днів",
+      "sku": "SKU",
+      "barcode": "Штрих-код",
+      "weight": "Вага, г"
+    },
+    "vat": { "none": "Без ПДВ", "v20": "ПДВ 20%", "v7": "ПДВ 7%" },
+    "media": {
+      "hint": "Головне зображення + до 8 додаткових · перетягуй порядок",
+      "primary": "головне",
+      "add": "Додати"
+    },
+    "variants": {
+      "hint": "Розміри, обсмажка, помол — кожен варіант має свій SKU та запас",
+      "optionRoast": "Обсмажка",
+      "optionWeight": "Вага",
+      "addOption": "Опція",
+      "colVariant": "Варіант",
+      "colPrice": "Ціна",
+      "colStock": "Запас",
+      "colSku": "SKU",
+      "empty": "Додайте опцію, щоб згенерувати варіанти"
+    },
+    "channels": {
+      "webSub": "ваш-slug.shop",
+      "igSub": "@shop_handle",
+      "googleSub": "Shopping · безкоштовно",
+      "posSub": "офлайн"
+    },
+    "seo": {
+      "hint": "Як товар бачить Google",
+      "url": "URL",
+      "metaTitle": "Meta title",
+      "metaDesc": "Meta description",
+      "chars": "символів"
+    },
+    "preview": { "title": "Preview картки", "placeholderName": "Назва товару" },
+    "margin": {
+      "title": "Маржа · прогноз",
+      "price": "Ціна",
+      "cost": "Собівартість",
+      "margin": "Маржа"
+    }
+  },
   "customers": {
     "title": "Клієнти",
     "subtitle": "Магазин: {{shop}} · {{count}} клієнт(ів)",
