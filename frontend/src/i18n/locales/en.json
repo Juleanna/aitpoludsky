@@ -369,7 +369,9 @@
     "media": {
       "hint": "Main image + up to 8 extras · drag to reorder",
       "primary": "main",
-      "add": "Add"
+      "add": "Add",
+      "uploadFailed": "upload failed",
+      "uploadPartial": "Failed to upload {{count}} image(s)"
     },
     "variants": {
       "hint": "Sizes, roast, grind — each variant has its own SKU and stock",

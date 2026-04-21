@@ -194,6 +194,9 @@ export function NewProductPage() {
   // Помилки per-field: ключ — назва поля payload (name/sku/price/…),
   // значення — текст повідомлення. Чистяться при зміні конкретного поля.
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  // Помилки завантаження медіа — по одному повідомленню на файл. Показуємо
+  // під блоком «Медіа», не блокуючи navigate після успішного створення товару.
+  const [mediaErrors, setMediaErrors] = useState<{ name: string; message: string }[]>([]);
 
   function clearFieldErr(field: string) {
     setFieldErrors((prev) => {
@@ -440,13 +443,30 @@ export function NewProductPage() {
       };
       const created = await catalogApi.createProduct(activeShop.slug, payload);
       // Послідовно аплоадимо зображення, щоб зберегти порядок на сервері.
+      // Помилки окремих файлів не блокують перехід — збираємо у mediaErrors
+      // і показуємо пізніше (якщо треба — залишаємось на сторінці).
+      const failed: { name: string; message: string }[] = [];
       for (const file of mediaFiles) {
         try {
           await catalogApi.uploadProductImage(activeShop.slug, created.id, file);
-        } catch {
-          // Не блокуємо redirect — показуємо alert і продовжуємо.
-          window.alert(`${file.name}: ${t("newProduct.media.uploadFailed")}`);
+        } catch (uploadErr) {
+          let msg = t("newProduct.media.uploadFailed");
+          if (uploadErr instanceof ApiError) {
+            const body = uploadErr.body as Record<string, string[] | string> | null;
+            if (body && typeof body === "object") {
+              const first = Object.values(body)[0];
+              if (first) msg = Array.isArray(first) ? first[0] : String(first);
+            }
+          }
+          failed.push({ name: file.name, message: msg });
         }
+      }
+      if (failed.length > 0) {
+        // Товар створений, але частина файлів не завантажилась — лишаємо
+        // користувача на сторінці, щоб міг повторити завантаження згодом.
+        setMediaErrors(failed);
+        setError(t("newProduct.media.uploadPartial", { count: failed.length }));
+        return;
       }
       navigate("/catalog");
     } catch (err) {
@@ -709,6 +729,20 @@ export function NewProductPage() {
                 </button>
               )}
             </div>
+            {mediaErrors.length > 0 && (
+              <div className="field-err" style={{ marginTop: 10 }}>
+                <div style={{ fontWeight: 500, marginBottom: 4 }}>
+                  {t("newProduct.media.uploadPartial", { count: mediaErrors.length })}
+                </div>
+                <ul style={{ margin: 0, paddingLeft: 18 }}>
+                  {mediaErrors.map((e, i) => (
+                    <li key={i}>
+                      <span className="mono">{e.name}</span> — {e.message}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </section>
 
           {/* Ціна та запас */}

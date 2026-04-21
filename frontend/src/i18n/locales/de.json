@@ -369,7 +369,9 @@
     "media": {
       "hint": "Hauptbild + bis zu 8 weitere · Reihenfolge per Drag",
       "primary": "Haupt",
-      "add": "Hinzufügen"
+      "add": "Hinzufügen",
+      "uploadFailed": "Upload fehlgeschlagen",
+      "uploadPartial": "{{count}} Bild(er) konnten nicht hochgeladen werden"
     },
     "variants": {
       "hint": "Größen, Röstung, Mahlung — jede Variante hat eigene SKU und Bestand",

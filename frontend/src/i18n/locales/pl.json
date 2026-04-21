@@ -369,7 +369,9 @@
     "media": {
       "hint": "Główne zdjęcie + do 8 dodatkowych · przeciągnij, by zmienić kolejność",
       "primary": "główne",
-      "add": "Dodaj"
+      "add": "Dodaj",
+      "uploadFailed": "nie udało się przesłać",
+      "uploadPartial": "Nie udało się przesłać {{count}} zdjęć"
     },
     "variants": {
       "hint": "Rozmiary, palenie, mielenie — każdy wariant ma własne SKU i stan",
