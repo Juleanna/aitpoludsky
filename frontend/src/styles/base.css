@@ -196,7 +196,7 @@ input, select, textarea { font-family: inherit; color: inherit; }
 .page-title em { font-style: italic; color: var(--accent-ink); }
 .page-sub { color: var(--text-2); font-size: 14px; margin: 0; }
 
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px; font-weight: 500; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--bg-elev); color: var(--text); transition: all 0.12s; white-space: nowrap; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px; font-weight: 500; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--bg-elev); color: var(--text); transition: all 0.12s; white-space: nowrap; text-decoration: none; }
 .btn:hover { background: var(--bg-tint); border-color: var(--line-strong); }
 .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
 .btn.primary:hover { background: var(--text-2); }
