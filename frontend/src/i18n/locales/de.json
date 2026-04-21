@@ -76,15 +76,43 @@
     }
   },
   "nav": {
-    "dashboard": "Übersicht",
+    "dashboard": "Startseite",
+    "analytics": "Analyse",
+    "calendar": "Kalender",
     "orders": "Bestellungen",
     "catalog": "Katalog",
     "customers": "Kunden",
-    "inventory": "Lager",
     "discounts": "Rabatte",
+    "garden": "Produktgarten",
+    "shipping": "Versand",
+    "locations": "Standorte",
+    "payments": "Zahlungen",
+    "inventory": "Lager",
+    "storefront": "Online-Shop",
+    "pos": "POS",
     "inbox": "Postfach",
-    "storefront": "Shopfront",
     "shops": "Shops"
+  },
+  "sidebar": {
+    "health": "HEALTH",
+    "userMenu": "Benutzermenü",
+    "section": {
+      "overview": "Überblick",
+      "sales": "Verkauf",
+      "operations": "Betrieb",
+      "channels": "Kanäle"
+    }
+  },
+  "comingSoon": {
+    "title": "Bald verfügbar",
+    "description": "Dieser Bereich kommt in späteren Iterationen.",
+    "analyticsDesc": "Tiefergehende Verkaufsberichte, Kundengruppen, Conversions.",
+    "calendarDesc": "Finanzkalender: Auszahlungen, Steuern, Abonnements.",
+    "gardenDesc": "KI-Vorschläge für Produkte, die Sie hinzufügen sollten.",
+    "shippingDesc": "Versandmethoden, Zonen, Tarife der Transporteure.",
+    "locationsDesc": "Lager und Abholstationen, standardmäßig eine.",
+    "paymentsDesc": "Bar, Karte, QR — Konfiguration der Zahlungsannahme.",
+    "posDesc": "Offline-Kasse: Scanner, Belege, Schichten."
   },
   "common": {
     "save": "Speichern",

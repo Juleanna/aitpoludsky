@@ -5,6 +5,7 @@ import { Shell } from "@/components/Shell";
 import { AuthProvider } from "@/context/AuthContext";
 import { ShopProvider } from "@/context/ShopContext";
 import { CatalogPage } from "@/pages/CatalogPage";
+import { ComingSoonPage } from "@/pages/ComingSoonPage";
 import { CustomersPage } from "@/pages/CustomersPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { DiscountsPage } from "@/pages/DiscountsPage";
@@ -52,14 +53,51 @@ export function App() {
                 </RequireAuth>
               }
             >
+              {/* OVERVIEW */}
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route
+                path="/analytics"
+                element={<ComingSoonPage titleKey="nav.analytics" descKey="comingSoon.analyticsDesc" iconName="chart" />}
+              />
+              <Route
+                path="/calendar"
+                element={<ComingSoonPage titleKey="nav.calendar" descKey="comingSoon.calendarDesc" iconName="calendar" />}
+              />
+
+              {/* ПРОДАЖ */}
               <Route path="/orders" element={<OrdersPage />} />
               <Route path="/catalog" element={<CatalogPage />} />
               <Route path="/customers" element={<CustomersPage />} />
-              <Route path="/inventory" element={<InventoryPage />} />
               <Route path="/discounts" element={<DiscountsPage />} />
-              <Route path="/inbox" element={<InboxPage />} />
+              <Route
+                path="/garden"
+                element={<ComingSoonPage titleKey="nav.garden" descKey="comingSoon.gardenDesc" iconName="leaf" />}
+              />
+
+              {/* ОПЕРАЦІЇ */}
+              <Route
+                path="/shipping"
+                element={<ComingSoonPage titleKey="nav.shipping" descKey="comingSoon.shippingDesc" iconName="truck" />}
+              />
+              <Route
+                path="/locations"
+                element={<ComingSoonPage titleKey="nav.locations" descKey="comingSoon.locationsDesc" iconName="store" />}
+              />
+              <Route
+                path="/payments"
+                element={<ComingSoonPage titleKey="nav.payments" descKey="comingSoon.paymentsDesc" iconName="credit" />}
+              />
+              <Route path="/inventory" element={<InventoryPage />} />
+
+              {/* КАНАЛИ */}
               <Route path="/storefront" element={<StorefrontAdminPage />} />
+              <Route
+                path="/pos"
+                element={<ComingSoonPage titleKey="nav.pos" descKey="comingSoon.posDesc" iconName="grid" />}
+              />
+              <Route path="/inbox" element={<InboxPage />} />
+
+              {/* Налаштування (доступ через user-меню футера) */}
               <Route path="/shops" element={<ShopsPage />} />
             </Route>
 

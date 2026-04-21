@@ -77,14 +77,42 @@
   },
   "nav": {
     "dashboard": "Panel",
+    "analytics": "Analityka",
+    "calendar": "Kalendarz",
     "orders": "Zamówienia",
     "catalog": "Katalog",
     "customers": "Klienci",
-    "inventory": "Magazyn",
     "discounts": "Rabaty",
+    "garden": "Ogród produktów",
+    "shipping": "Dostawa",
+    "locations": "Lokalizacje",
+    "payments": "Płatności",
+    "inventory": "Magazyn",
+    "storefront": "Sklep online",
+    "pos": "POS",
     "inbox": "Wiadomości",
-    "storefront": "Witryna",
     "shops": "Sklepy"
+  },
+  "sidebar": {
+    "health": "HEALTH",
+    "userMenu": "Menu użytkownika",
+    "section": {
+      "overview": "Przegląd",
+      "sales": "Sprzedaż",
+      "operations": "Operacje",
+      "channels": "Kanały"
+    }
+  },
+  "comingSoon": {
+    "title": "Wkrótce",
+    "description": "Ta sekcja pojawi się w kolejnych iteracjach.",
+    "analyticsDesc": "Głębsze raporty sprzedaży, kohorty klientów, konwersje.",
+    "calendarDesc": "Kalendarz finansowy: wypłaty, podatki, subskrypcje.",
+    "gardenDesc": "Sugestie AI, jakie produkty dodać do katalogu.",
+    "shippingDesc": "Metody dostawy, strefy, stawki przewoźników.",
+    "locationsDesc": "Magazyny i punkty odbioru, domyślnie jeden.",
+    "paymentsDesc": "Gotówka, karta, QR — konfiguracja przyjmowania płatności.",
+    "posDesc": "Kasa w punkcie stacjonarnym: skaner, paragony, zmiany."
   },
   "common": {
     "save": "Zapisz",

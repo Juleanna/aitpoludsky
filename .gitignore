@@ -47,8 +47,10 @@ Thumbs.db
 # Claude Code runtime artefacts
 .claude/
 
-# Prototype (kept for reference, not part of new project)
-Kramnycia SaaS.html
-styles.css
-components.css
-components/
+# Prototype (kept for reference, not part of new project).
+# Leading slash обмежує правило коренем проекту — щоб не зачепити
+# frontend/src/components/ та подібні.
+/Kramnycia SaaS.html
+/styles.css
+/components.css
+/components/

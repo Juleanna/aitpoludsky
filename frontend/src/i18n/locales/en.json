@@ -76,15 +76,43 @@
     }
   },
   "nav": {
-    "dashboard": "Dashboard",
+    "dashboard": "Home",
+    "analytics": "Analytics",
+    "calendar": "Calendar",
     "orders": "Orders",
     "catalog": "Catalog",
     "customers": "Customers",
-    "inventory": "Inventory",
     "discounts": "Discounts",
+    "garden": "Product Garden",
+    "shipping": "Shipping",
+    "locations": "Locations",
+    "payments": "Payments",
+    "inventory": "Inventory",
+    "storefront": "Online Store",
+    "pos": "POS",
     "inbox": "Inbox",
-    "storefront": "Storefront",
     "shops": "Shops"
+  },
+  "sidebar": {
+    "health": "HEALTH",
+    "userMenu": "User menu",
+    "section": {
+      "overview": "Overview",
+      "sales": "Sales",
+      "operations": "Operations",
+      "channels": "Channels"
+    }
+  },
+  "comingSoon": {
+    "title": "Coming soon",
+    "description": "This section will arrive in upcoming iterations.",
+    "analyticsDesc": "Deeper sales reports, customer cohorts, conversions.",
+    "calendarDesc": "Financial calendar: payouts, taxes, subscriptions.",
+    "gardenDesc": "AI suggestions for products to add to your catalog.",
+    "shippingDesc": "Shipping methods, zones, carrier rates.",
+    "locationsDesc": "Warehouses and pickup points, default is one.",
+    "paymentsDesc": "Cash, card, QR — payment acceptance configuration.",
+    "posDesc": "Offline point-of-sale: scanner, receipts, shifts."
   },
   "common": {
     "save": "Save",
