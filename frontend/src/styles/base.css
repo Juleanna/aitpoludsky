@@ -135,20 +135,16 @@ input, select, textarea { font-family: inherit; color: inherit; }
 .quick-screen-link.active { background: var(--bg-elev); color: var(--text); box-shadow: var(--shadow-sm); }
 
 /* ── Марія — AI-помічниця ────────────────────────────────────── */
-.maria-fab {
-  position: fixed; right: 24px; bottom: 24px; z-index: 80;
-  width: 54px; height: 54px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), oklch(0.65 0.14 20));
-  color: white; display: grid; place-items: center;
-  border: 2px solid var(--bg); box-shadow: var(--shadow-lg);
-  cursor: pointer; transition: transform 0.15s;
-}
-.maria-fab:hover { transform: scale(1.05); }
-.maria-fab-avatar { font-family: var(--font-display); font-style: italic; font-size: 24px; font-weight: 500; }
+/* Тригер у правій частині топбару замість юзер-pill */
+.maria-trigger { display: flex; align-items: center; gap: 8px; padding: 4px 14px 4px 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg-elev); color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; transition: border-color 0.12s; }
+.maria-trigger:hover { border-color: var(--line-strong); }
+.maria-avatar-sm { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), oklch(0.65 0.14 20)); color: white; display: grid; place-items: center; font-family: var(--font-display); font-style: italic; font-size: 14px; font-weight: 500; }
+.maria-trigger-name { font-family: var(--font-display); font-style: italic; font-size: 15px; font-weight: 500; letter-spacing: -0.01em; padding-right: 4px; }
 
+/* Панель з чатом Марії — закріплюється у правому верхньому куті під топбаром */
 .maria-panel {
-  position: fixed; right: 24px; bottom: 90px; z-index: 80;
-  width: 360px; max-width: calc(100vw - 48px); height: 520px; max-height: calc(100vh - 120px);
+  position: fixed; right: 24px; top: 70px; z-index: 80;
+  width: 380px; max-width: calc(100vw - 48px); height: 560px; max-height: calc(100vh - 90px);
   background: var(--bg-elev); border: 1px solid var(--line-strong); border-radius: 16px;
   box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden;
   animation: maria-slide 0.18s ease-out;

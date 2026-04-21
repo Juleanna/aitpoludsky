@@ -54,14 +54,16 @@ export function MariaAssistant() {
 
   return (
     <>
+      {/* Тригер-pill у топбарі: аватар "М" + імʼя. Клік відкриває панель чату. */}
       <button
         type="button"
-        className="maria-fab"
+        className="maria-trigger"
         onClick={() => setOpen((o) => !o)}
         aria-label={t("maria.openLabel")}
         title={t("maria.openLabel")}
       >
-        <span className="maria-fab-avatar">М</span>
+        <span className="maria-avatar-sm">М</span>
+        <span className="maria-trigger-name">{t("maria.name")}</span>
       </button>
 
       {open && (
