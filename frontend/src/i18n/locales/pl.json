@@ -449,8 +449,52 @@
     }
   },
   "commandPalette": {
-    "placeholder": "Przejdź do…",
-    "empty": "Nic nie znaleziono"
+    "placeholder": "Szukaj zamówień, produktów, klientów, akcji…",
+    "empty": "Nic nie znaleziono",
+    "stockUnit": "szt",
+    "ordersUnit": "zam",
+    "resultsCount": "wyników",
+    "sections": {
+      "navigation": "Nawigacja",
+      "actions": "Akcje",
+      "orders": "Zamówienia",
+      "products": "Produkty",
+      "customers": "Klienci",
+      "settings": "Ustawienia"
+    },
+    "subtitles": {
+      "dashboard": "Panel",
+      "orders": "Wszystkie kanały",
+      "catalog": "Produkty",
+      "customers": "CRM",
+      "analytics": "Raporty",
+      "inventory": "Magazyn i ruchy",
+      "discounts": "Kody promo i reguły",
+      "inbox": "Wiadomości",
+      "storefront": "Publiczna witryna",
+      "pos": "Tryb kasy",
+      "onboarding": "Kreator konfiguracji"
+    },
+    "actions": {
+      "newProduct": { "title": "Utwórz nowy produkt", "subtitle": "Dodaj do katalogu" },
+      "newOrder": { "title": "Utwórz zamówienie ręcznie", "subtitle": "POS lub online" },
+      "exportOrders": {
+        "title": "Eksportuj zamówienia do CSV",
+        "subtitle": "Wszystkie z tego miesiąca",
+        "comingSoon": "Eksport pojawi się w przyszłych wersjach."
+      },
+      "inviteTeam": {
+        "title": "Zaproś do zespołu",
+        "subtitle": "Wyślij zaproszenie",
+        "comingSoon": "Zespoły są w fazie rozwoju."
+      }
+    },
+    "settings": {
+      "toggleTheme": { "title": "Przełącz motyw" },
+      "compactSidebar": { "title": "Kompaktowy sidebar", "subtitle": "Zwiń nawigację" },
+      "tweaks": { "title": "Ustawienia interfejsu", "subtitle": "Motyw, akcent, sezon" }
+    },
+    "hints": { "choose": "wybierz", "open": "otwórz", "close": "zamknij" }
   },
   "seasonalBanner": {
     "spring": {

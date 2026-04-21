@@ -449,8 +449,52 @@
     }
   },
   "commandPalette": {
-    "placeholder": "Springen zu…",
-    "empty": "Nichts gefunden"
+    "placeholder": "Bestellungen, Produkte, Kunden, Aktionen suchen…",
+    "empty": "Nichts gefunden",
+    "stockUnit": "Stk",
+    "ordersUnit": "Best",
+    "resultsCount": "Ergebnisse",
+    "sections": {
+      "navigation": "Navigation",
+      "actions": "Aktionen",
+      "orders": "Bestellungen",
+      "products": "Produkte",
+      "customers": "Kunden",
+      "settings": "Einstellungen"
+    },
+    "subtitles": {
+      "dashboard": "Startseite",
+      "orders": "Alle Kanäle",
+      "catalog": "Produkte",
+      "customers": "CRM",
+      "analytics": "Berichte",
+      "inventory": "Lager und Bewegungen",
+      "discounts": "Promo-Codes und Regeln",
+      "inbox": "Nachrichten",
+      "storefront": "Öffentliche Shopfront",
+      "pos": "Kassen-Modus",
+      "onboarding": "Einrichtungsassistent"
+    },
+    "actions": {
+      "newProduct": { "title": "Neues Produkt erstellen", "subtitle": "Zum Katalog hinzufügen" },
+      "newOrder": { "title": "Bestellung manuell erstellen", "subtitle": "POS oder online" },
+      "exportOrders": {
+        "title": "Bestellungen als CSV exportieren",
+        "subtitle": "Alle des aktuellen Monats",
+        "comingSoon": "Export kommt in einer künftigen Version."
+      },
+      "inviteTeam": {
+        "title": "Teammitglied einladen",
+        "subtitle": "Einladung senden",
+        "comingSoon": "Teams sind noch in Entwicklung."
+      }
+    },
+    "settings": {
+      "toggleTheme": { "title": "Theme umschalten" },
+      "compactSidebar": { "title": "Kompakte Seitenleiste", "subtitle": "Navigation einklappen" },
+      "tweaks": { "title": "Oberflächeneinstellungen", "subtitle": "Theme, Akzent, Saison" }
+    },
+    "hints": { "choose": "wählen", "open": "öffnen", "close": "schließen" }
   },
   "seasonalBanner": {
     "spring": {

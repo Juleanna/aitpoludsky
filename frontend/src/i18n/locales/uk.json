@@ -449,8 +449,52 @@
     }
   },
   "commandPalette": {
-    "placeholder": "Перейти до…",
-    "empty": "Нічого не знайдено"
+    "placeholder": "Шукати замовлення, товари, клієнтів, дії…",
+    "empty": "Нічого не знайдено",
+    "stockUnit": "шт",
+    "ordersUnit": "зам",
+    "resultsCount": "результатів",
+    "sections": {
+      "navigation": "Навігація",
+      "actions": "Дії",
+      "orders": "Замовлення",
+      "products": "Товари",
+      "customers": "Клієнти",
+      "settings": "Налаштування"
+    },
+    "subtitles": {
+      "dashboard": "Головна",
+      "orders": "Всі канали",
+      "catalog": "Товари",
+      "customers": "CRM",
+      "analytics": "Звіти",
+      "inventory": "Склад і рухи",
+      "discounts": "Промокоди і правила",
+      "inbox": "Повідомлення",
+      "storefront": "Публічна вітрина",
+      "pos": "Режим каси",
+      "onboarding": "Налаштування"
+    },
+    "actions": {
+      "newProduct": { "title": "Створити новий товар", "subtitle": "Додати до каталогу" },
+      "newOrder": { "title": "Створити замовлення вручну", "subtitle": "POS або онлайн" },
+      "exportOrders": {
+        "title": "Експортувати замовлення в CSV",
+        "subtitle": "Всі за цей місяць",
+        "comingSoon": "Експорт зʼявиться у наступних ітераціях."
+      },
+      "inviteTeam": {
+        "title": "Запросити в команду",
+        "subtitle": "Відправити інвайт",
+        "comingSoon": "Команди ще у розробці."
+      }
+    },
+    "settings": {
+      "toggleTheme": { "title": "Переключити тему" },
+      "compactSidebar": { "title": "Компактний сайдбар", "subtitle": "Згорнути навігацію" },
+      "tweaks": { "title": "Налаштування інтерфейсу", "subtitle": "Тема, акцент, сезон" }
+    },
+    "hints": { "choose": "обрати", "open": "відкрити", "close": "закрити" }
   },
   "seasonalBanner": {
     "spring": {

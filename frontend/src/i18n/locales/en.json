@@ -449,8 +449,52 @@
     }
   },
   "commandPalette": {
-    "placeholder": "Jump to…",
-    "empty": "Nothing found"
+    "placeholder": "Search orders, products, customers, actions…",
+    "empty": "Nothing found",
+    "stockUnit": "pcs",
+    "ordersUnit": "ord",
+    "resultsCount": "results",
+    "sections": {
+      "navigation": "Navigation",
+      "actions": "Actions",
+      "orders": "Orders",
+      "products": "Products",
+      "customers": "Customers",
+      "settings": "Settings"
+    },
+    "subtitles": {
+      "dashboard": "Home",
+      "orders": "All channels",
+      "catalog": "Products",
+      "customers": "CRM",
+      "analytics": "Reports",
+      "inventory": "Stock and moves",
+      "discounts": "Promo codes and rules",
+      "inbox": "Messages",
+      "storefront": "Public shopfront",
+      "pos": "Cash-register mode",
+      "onboarding": "Setup wizard"
+    },
+    "actions": {
+      "newProduct": { "title": "Create new product", "subtitle": "Add to catalog" },
+      "newOrder": { "title": "Create order manually", "subtitle": "POS or online" },
+      "exportOrders": {
+        "title": "Export orders to CSV",
+        "subtitle": "All for this month",
+        "comingSoon": "Export is coming in a future release."
+      },
+      "inviteTeam": {
+        "title": "Invite teammate",
+        "subtitle": "Send invite",
+        "comingSoon": "Teams are still in development."
+      }
+    },
+    "settings": {
+      "toggleTheme": { "title": "Toggle theme" },
+      "compactSidebar": { "title": "Compact sidebar", "subtitle": "Collapse navigation" },
+      "tweaks": { "title": "Interface settings", "subtitle": "Theme, accent, season" }
+    },
+    "hints": { "choose": "choose", "open": "open", "close": "close" }
   },
   "seasonalBanner": {
     "spring": {
