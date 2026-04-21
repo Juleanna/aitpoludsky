@@ -74,14 +74,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setLanguage = useCallback(async (language: string) => {
-    // Update local state + i18n immediately for snappy UX; persist afterwards.
+    // Оновлюємо локальний стан + i18n одразу для швидкого UX; збереження — потім.
     void i18n.changeLanguage(language);
     setUser((u) => (u ? { ...u, language } : u));
     try {
       const me = await authApi.updateMe({ language });
       setUser(me);
     } catch {
-      // Ignore persistence errors — UI is already localized; next login reconciles.
+      // Ігноруємо помилки збереження — UI вже локалізовано; наступний логін узгодить.
     }
   }, []);
 

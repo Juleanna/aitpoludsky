@@ -52,7 +52,7 @@ class StockMovementSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         product: Product = validated_data["product"]
         delta: int = validated_data["delta"]
-        # Atomic stock update using F() to avoid lost-updates under concurrent moves.
+        # Атомарне оновлення stock через F(), щоб уникнути втрат при конкурентних рухах.
         Product.objects.filter(pk=product.pk).update(stock=F("stock") + delta)
         product.refresh_from_db(fields=["stock"])
         request = self.context["request"]

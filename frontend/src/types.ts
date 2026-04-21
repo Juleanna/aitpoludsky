@@ -28,7 +28,7 @@ export type Product = {
   sku: string;
   name: string;
   description: string;
-  price: string; // DRF serialises DecimalField as string to preserve precision
+  price: string; // DRF серіалізує DecimalField як рядок, щоб зберегти точність
   stock: number;
   is_active: boolean;
   translations: ProductTranslations;
@@ -68,6 +68,8 @@ export type Order = {
   status: OrderStatus;
   channel: OrderChannel;
   subtotal: string;
+  discount_code: string;
+  discount_amount: string;
   total: string;
   note: string;
   items: OrderItem[];
@@ -86,6 +88,72 @@ export type OrderInput = {
   channel?: OrderChannel;
   note?: string;
   items: OrderItemInput[];
+  discount_code_input?: string | null;
+};
+
+export type DiscountKind = "percent" | "fixed";
+
+export type Discount = {
+  id: number;
+  code: string;
+  name: string;
+  kind: DiscountKind;
+  value: string;
+  min_subtotal: string;
+  starts_at: string | null;
+  ends_at: string | null;
+  max_uses: number | null;
+  uses_count: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type DiscountInput = {
+  code: string;
+  name?: string;
+  kind?: DiscountKind;
+  value: string;
+  min_subtotal?: string;
+  starts_at?: string | null;
+  ends_at?: string | null;
+  max_uses?: number | null;
+  is_active?: boolean;
+};
+
+export type DiscountValidateResult =
+  | { valid: true; code: string; name: string; kind: DiscountKind; value: string; discount_amount: string; new_total: string }
+  | { valid: false; error: string; code?: string };
+
+export type InboxChannel = "web" | "ig" | "tg" | "viber" | "manual";
+
+export type InboxMessage = {
+  id: number;
+  direction: "in" | "out";
+  author_name: string;
+  body: string;
+  created_at: string;
+};
+
+export type InboxThread = {
+  id: number;
+  channel: InboxChannel;
+  subject: string;
+  customer: number | null;
+  customer_name: string;
+  unread: boolean;
+  external_id: string;
+  messages: InboxMessage[];
+  last_message: { direction: "in" | "out"; body: string; created_at: string } | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type InboxThreadInput = {
+  channel: InboxChannel;
+  subject?: string;
+  customer_id?: number | null;
+  external_id?: string;
 };
 
 export type CustomerTier = "bronze" | "silver" | "gold" | "platinum";

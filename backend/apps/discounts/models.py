@@ -59,7 +59,7 @@ class Discount(models.Model):
         return min(amount, subtotal).quantize(Decimal("0.01"))
 
     def validate_for_subtotal(self, subtotal: Decimal) -> str | None:
-        """Return an error message or None if the discount can be applied."""
+        """Повертає текст помилки, або None — якщо знижку можна застосувати."""
         if not self.is_active:
             return "Знижка неактивна."
         now = timezone.now()

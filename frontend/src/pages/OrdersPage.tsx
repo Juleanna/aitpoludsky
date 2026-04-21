@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 
 import { ApiError } from "@/api/client";
 import * as catalogApi from "@/api/catalog";
+import * as discountsApi from "@/api/discounts";
 import * as ordersApi from "@/api/orders";
 import { Icon } from "@/components/Icon";
 import { useShops } from "@/context/ShopContext";
-import type { Order, OrderChannel, OrderInput, OrderItemInput, OrderStatus, Product } from "@/types";
+import type { DiscountValidateResult, Order, OrderChannel, OrderInput, OrderItemInput, OrderStatus, Product } from "@/types";
 import { formatMoney } from "@/utils/format";
 
 const STATUSES: OrderStatus[] = ["draft", "pending", "paid", "shipped", "completed", "cancelled"];
@@ -184,6 +185,21 @@ function OrderDrawer({ shopSlug, order, currency, onClose, onSaved }: DrawerProp
   const [products, setProducts] = useState<Product[]>([]);
   const [busy, setBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [promoCode, setPromoCode] = useState(order?.discount_code ?? "");
+  const [promoResult, setPromoResult] = useState<DiscountValidateResult | null>(
+    order?.discount_code
+      ? {
+          valid: true,
+          code: order.discount_code,
+          name: "",
+          kind: "percent",
+          value: "0",
+          discount_amount: order.discount_amount,
+          new_total: order.total,
+        }
+      : null,
+  );
+  const [promoBusy, setPromoBusy] = useState(false);
 
   useEffect(() => {
     void catalogApi.listProducts(shopSlug).then(setProducts).catch(() => setProducts([]));
@@ -210,6 +226,23 @@ function OrderDrawer({ shopSlug, order, currency, onClose, onSaved }: DrawerProp
     setLines((ls) => [...ls, { product_id: null, quantity: 1 }]);
   }
 
+  async function applyPromo() {
+    const code = promoCode.trim();
+    if (!code) {
+      setPromoResult(null);
+      return;
+    }
+    setPromoBusy(true);
+    try {
+      const res = await discountsApi.validateDiscount(shopSlug, code, String(subtotal));
+      setPromoResult(res);
+    } catch {
+      setPromoResult({ valid: false, error: t("discounts.invalid") });
+    } finally {
+      setPromoBusy(false);
+    }
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setFieldErrors({});
@@ -230,6 +263,7 @@ function OrderDrawer({ shopSlug, order, currency, onClose, onSaved }: DrawerProp
       channel,
       note: note || undefined,
       items,
+      discount_code_input: promoResult && promoResult.valid ? promoCode : "",
     };
 
     setBusy(true);
@@ -358,13 +392,55 @@ function OrderDrawer({ shopSlug, order, currency, onClose, onSaved }: DrawerProp
             <textarea value={note} rows={2} onChange={(e) => setNote(e.target.value)} style={inputStyle} />
           </Field>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "10px 0", borderTop: "1px dashed var(--line)" }}>
-            <span className="mono" style={{ fontSize: 11, color: "var(--text-3)", letterSpacing: "0.1em" }}>
-              {t("orders.total")}
-            </span>
-            <span className="serif" style={{ fontSize: 28 }}>
-              {formatMoney(String(subtotal), currency)}
-            </span>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 120px", gap: 8, alignItems: "end" }}>
+            <Field label={t("discounts.promoCode")}>
+              <input
+                value={promoCode}
+                onChange={(e) => {
+                  setPromoCode(e.target.value.toUpperCase());
+                  if (promoResult) setPromoResult(null);
+                }}
+                style={{ ...inputStyle, fontFamily: "var(--font-mono)" }}
+              />
+            </Field>
+            <button
+              type="button"
+              className="btn"
+              onClick={applyPromo}
+              disabled={promoBusy}
+              style={{ justifyContent: "center" }}
+            >
+              {promoBusy ? "…" : t("discounts.apply")}
+            </button>
+          </div>
+          {promoResult && !promoResult.valid && (
+            <div style={{ color: "var(--err)", fontSize: 12 }}>{promoResult.error}</div>
+          )}
+
+          <div style={{ padding: "10px 0", borderTop: "1px dashed var(--line)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--text-2)", padding: "2px 0" }}>
+              <span className="mono">{t("orderDrawer.subtotal")}</span>
+              <span className="mono">{formatMoney(String(subtotal), currency)}</span>
+            </div>
+            {promoResult && promoResult.valid && (
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--ok)", padding: "2px 0" }}>
+                <span className="mono">
+                  {t("orderDrawer.discountLine")} ({promoResult.code})
+                </span>
+                <span className="mono">−{formatMoney(promoResult.discount_amount, currency)}</span>
+              </div>
+            )}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 6 }}>
+              <span className="mono" style={{ fontSize: 11, color: "var(--text-3)", letterSpacing: "0.1em" }}>
+                {t("orderDrawer.totalAfter")}
+              </span>
+              <span className="serif" style={{ fontSize: 28 }}>
+                {formatMoney(
+                  promoResult && promoResult.valid ? promoResult.new_total : String(subtotal),
+                  currency,
+                )}
+              </span>
+            </div>
           </div>
 
           {fieldErrors._ && <div style={{ color: "var(--err)", fontSize: 12 }}>{fieldErrors._}</div>}

@@ -45,7 +45,7 @@ export async function apiFetch<T = unknown>(path: string, options: RequestOption
     try {
       errBody = await res.json();
     } catch {
-      /* ignore */
+      /* ігноруємо */
     }
     throw new ApiError(res.status, errBody);
   }

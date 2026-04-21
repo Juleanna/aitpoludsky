@@ -17,12 +17,12 @@ def _resolve_shop(request):
 
 
 class TenantMiddleware:
-    """Attach ``request.shop`` based on ``X-Shop-Slug`` header.
+    """Прикріпляє ``request.shop`` на основі заголовка ``X-Shop-Slug``.
 
-    Views that require a shop should check ``request.shop`` and return 400/404
-    when it's missing. The middleware itself does not block unauthenticated or
-    non-tenant requests — ``/api/auth/*`` and ``/api/shops/`` operate without a
-    selected shop.
+    View-и, які потребують магазин, мають перевіряти ``request.shop`` та
+    повертати 400/404, якщо його немає. Сам middleware не блокує
+    неавтентифіковані запити чи ті, що не потребують tenant — ``/api/auth/*``
+    і ``/api/shops/`` працюють без обраного магазину.
     """
 
     def __init__(self, get_response):

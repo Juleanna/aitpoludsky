@@ -7,11 +7,15 @@ import { ShopProvider } from "@/context/ShopContext";
 import { CatalogPage } from "@/pages/CatalogPage";
 import { CustomersPage } from "@/pages/CustomersPage";
 import { DashboardPage } from "@/pages/DashboardPage";
+import { DiscountsPage } from "@/pages/DiscountsPage";
+import { InboxPage } from "@/pages/InboxPage";
 import { InventoryPage } from "@/pages/InventoryPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { OrdersPage } from "@/pages/OrdersPage";
 import { ShopsPage } from "@/pages/ShopsPage";
 import { SignupPage } from "@/pages/SignupPage";
+import { StorefrontAdminPage } from "@/pages/StorefrontAdminPage";
+import { StorefrontPublicPage } from "@/pages/StorefrontPublicPage";
 
 export function App() {
   return (
@@ -35,6 +39,7 @@ export function App() {
                 </RequireGuest>
               }
             />
+            <Route path="/s/:shopSlug" element={<StorefrontPublicPage />} />
             <Route
               element={
                 <RequireAuth>
@@ -47,6 +52,9 @@ export function App() {
               <Route path="/catalog" element={<CatalogPage />} />
               <Route path="/customers" element={<CustomersPage />} />
               <Route path="/inventory" element={<InventoryPage />} />
+              <Route path="/discounts" element={<DiscountsPage />} />
+              <Route path="/inbox" element={<InboxPage />} />
+              <Route path="/storefront" element={<StorefrontAdminPage />} />
               <Route path="/shops" element={<ShopsPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />

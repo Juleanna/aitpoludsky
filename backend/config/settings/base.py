@@ -22,9 +22,12 @@ INSTALLED_APPS = [
     "apps.shops",
     "apps.catalog",
     "apps.customers",
+    "apps.discounts",
     "apps.orders",
     "apps.inventory",
     "apps.dashboard",
+    "apps.storefront",
+    "apps.inbox",
 ]
 
 MIDDLEWARE = [

@@ -41,6 +41,9 @@ dist-ssr/
 .DS_Store
 Thumbs.db
 
+# Claude Code runtime artefacts
+.claude/
+
 # Prototype (kept for reference, not part of new project)
 Kramnycia SaaS.html
 styles.css

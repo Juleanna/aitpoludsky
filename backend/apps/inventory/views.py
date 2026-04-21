@@ -13,7 +13,7 @@ class StockMovementViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
-    """Stock movements are append-only history: no update / delete endpoints."""
+    """Рухи складу — append-only історія: без endpoint-ів update / delete."""
 
     serializer_class = StockMovementSerializer
     permission_classes = [IsAuthenticated, IsShopMember]

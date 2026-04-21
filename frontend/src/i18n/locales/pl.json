@@ -6,6 +6,9 @@
     "catalog": "Katalog",
     "customers": "Klienci",
     "inventory": "Magazyn",
+    "discounts": "Rabaty",
+    "inbox": "Wiadomości",
+    "storefront": "Witryna",
     "shops": "Sklepy"
   },
   "common": {
@@ -201,6 +204,62 @@
     "saveError": "Nie udało się utworzyć sklepu.",
     "firstNeedShop": "Najpierw utwórz lub wybierz sklep.",
     "goShops": "Do sklepów →"
+  },
+  "discounts": {
+    "title": "Rabaty",
+    "subtitle": "Sklep: {{shop}} · {{count}} rabatów",
+    "newDiscount": "Nowy rabat",
+    "editDiscount": "Edytuj rabat",
+    "code": "Kod",
+    "name": "Nazwa",
+    "kind": "Typ",
+    "kindFixed": "Stała",
+    "value": "Wartość",
+    "minSubtotal": "Min. suma",
+    "startsAt": "Od",
+    "endsAt": "Do",
+    "maxUses": "Maks. użyć",
+    "maxUsesHint": "Puste = bez limitu",
+    "isActive": "Aktywny",
+    "empty": "Brak rabatów.",
+    "deleteConfirm": "Usunąć rabat?",
+    "colCode": "Kod",
+    "colKind": "Typ",
+    "colValue": "Wartość",
+    "colMin": "Min. suma",
+    "colUses": "Użycia",
+    "colStatus": "Status",
+    "apply": "Zastosuj",
+    "remove": "Usuń",
+    "promoCode": "Kod promo",
+    "invalid": "Nieprawidłowy"
+  },
+  "orderDrawer": {
+    "subtotal": "SUMA CZĘŚCIOWA",
+    "discountLine": "RABAT",
+    "totalAfter": "DO ZAPŁATY"
+  },
+  "inbox": {
+    "title": "Wiadomości",
+    "subtitle": "Wątki klientów (mock). Gotowe pod Instagram/Telegram/Viber.",
+    "newThread": "Nowy wątek",
+    "empty": "Brak wiadomości.",
+    "send": "Wyślij",
+    "reply": "Twoja odpowiedź…",
+    "channels": {
+      "web": "Web",
+      "ig": "Instagram",
+      "tg": "Telegram",
+      "viber": "Viber",
+      "manual": "Ręcznie"
+    }
+  },
+  "storefront": {
+    "title": "Witryna",
+    "subtitle": "{{shop}} · strona publiczna",
+    "viewPublic": "Otwórz witrynę publiczną →",
+    "noProducts": "Brak produktów.",
+    "addToCart": "Do koszyka"
   },
   "topbar": {
     "searchPlaceholder": "Szukaj",

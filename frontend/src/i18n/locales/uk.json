@@ -6,6 +6,9 @@
     "catalog": "Каталог",
     "customers": "Клієнти",
     "inventory": "Склад",
+    "discounts": "Знижки",
+    "inbox": "Повідомлення",
+    "storefront": "Вітрина",
     "shops": "Магазини"
   },
   "common": {
@@ -201,6 +204,62 @@
     "saveError": "Не вдалося створити магазин.",
     "firstNeedShop": "Спочатку створіть або виберіть магазин.",
     "goShops": "До магазинів →"
+  },
+  "discounts": {
+    "title": "Знижки",
+    "subtitle": "Магазин: {{shop}} · {{count}} знижок",
+    "newDiscount": "Нова знижка",
+    "editDiscount": "Редагувати знижку",
+    "code": "Код",
+    "name": "Назва",
+    "kind": "Тип",
+    "kindFixed": "Фіксована",
+    "value": "Значення",
+    "minSubtotal": "Мін. сума",
+    "startsAt": "Від",
+    "endsAt": "До",
+    "maxUses": "Макс. використань",
+    "maxUsesHint": "Порожньо = без обмеження",
+    "isActive": "Активна",
+    "empty": "Ще немає знижок.",
+    "deleteConfirm": "Видалити знижку?",
+    "colCode": "Код",
+    "colKind": "Тип",
+    "colValue": "Значення",
+    "colMin": "Мін. сума",
+    "colUses": "Використання",
+    "colStatus": "Статус",
+    "apply": "Застосувати",
+    "remove": "Прибрати",
+    "promoCode": "Промокод",
+    "invalid": "Недійсний"
+  },
+  "orderDrawer": {
+    "subtotal": "СУМА",
+    "discountLine": "ЗНИЖКА",
+    "totalAfter": "ДО СПЛАТИ"
+  },
+  "inbox": {
+    "title": "Повідомлення",
+    "subtitle": "Потоки з клієнтами (mock). Готовий шар під Instagram/Telegram/Viber.",
+    "newThread": "Новий потік",
+    "empty": "Ще немає повідомлень.",
+    "send": "Надіслати",
+    "reply": "Ваша відповідь…",
+    "channels": {
+      "web": "Сайт",
+      "ig": "Instagram",
+      "tg": "Telegram",
+      "viber": "Viber",
+      "manual": "Вручну"
+    }
+  },
+  "storefront": {
+    "title": "Вітрина",
+    "subtitle": "{{shop}} · публічна сторінка",
+    "viewPublic": "Відкрити публічну вітрину →",
+    "noProducts": "Товарів ще немає.",
+    "addToCart": "У кошик"
   },
   "topbar": {
     "searchPlaceholder": "Пошук",

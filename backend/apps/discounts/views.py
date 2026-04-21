@@ -23,7 +23,7 @@ class DiscountViewSet(viewsets.ModelViewSet):
 
 
 class DiscountValidateView(APIView):
-    """Preview a discount against a hypothetical subtotal (no side effects)."""
+    """Перевіряє знижку для гіпотетичної суми (без побічних ефектів)."""
 
     permission_classes = [IsAuthenticated, IsShopMember]
 

@@ -6,6 +6,9 @@
     "catalog": "Catalog",
     "customers": "Customers",
     "inventory": "Inventory",
+    "discounts": "Discounts",
+    "inbox": "Inbox",
+    "storefront": "Storefront",
     "shops": "Shops"
   },
   "common": {
@@ -201,6 +204,62 @@
     "saveError": "Could not create shop.",
     "firstNeedShop": "Create or pick a shop first.",
     "goShops": "To shops →"
+  },
+  "discounts": {
+    "title": "Discounts",
+    "subtitle": "Shop: {{shop}} · {{count}} discounts",
+    "newDiscount": "New discount",
+    "editDiscount": "Edit discount",
+    "code": "Code",
+    "name": "Name",
+    "kind": "Kind",
+    "kindFixed": "Fixed",
+    "value": "Value",
+    "minSubtotal": "Min. subtotal",
+    "startsAt": "From",
+    "endsAt": "To",
+    "maxUses": "Max uses",
+    "maxUsesHint": "Empty = unlimited",
+    "isActive": "Active",
+    "empty": "No discounts yet.",
+    "deleteConfirm": "Delete discount?",
+    "colCode": "Code",
+    "colKind": "Kind",
+    "colValue": "Value",
+    "colMin": "Min. subtotal",
+    "colUses": "Uses",
+    "colStatus": "Status",
+    "apply": "Apply",
+    "remove": "Remove",
+    "promoCode": "Promo code",
+    "invalid": "Invalid"
+  },
+  "orderDrawer": {
+    "subtotal": "SUBTOTAL",
+    "discountLine": "DISCOUNT",
+    "totalAfter": "TOTAL"
+  },
+  "inbox": {
+    "title": "Inbox",
+    "subtitle": "Customer threads (mock). Ready for Instagram/Telegram/Viber integrations.",
+    "newThread": "New thread",
+    "empty": "No messages yet.",
+    "send": "Send",
+    "reply": "Your reply…",
+    "channels": {
+      "web": "Web",
+      "ig": "Instagram",
+      "tg": "Telegram",
+      "viber": "Viber",
+      "manual": "Manual"
+    }
+  },
+  "storefront": {
+    "title": "Storefront",
+    "subtitle": "{{shop}} · public page",
+    "viewPublic": "Open public storefront →",
+    "noProducts": "No products yet.",
+    "addToCart": "Add to cart"
   },
   "topbar": {
     "searchPlaceholder": "Search",

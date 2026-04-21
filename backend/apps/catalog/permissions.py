@@ -2,11 +2,11 @@ from rest_framework.permissions import BasePermission
 
 
 class IsShopMember(BasePermission):
-    """Grants access only when ``TenantMiddleware`` resolved ``request.shop``.
+    """Надає доступ лише коли ``TenantMiddleware`` визначив ``request.shop``.
 
-    The middleware already verifies the requesting user is owner or member of
-    the shop referenced by the ``X-Shop-Slug`` header, so presence of
-    ``request.shop`` is sufficient proof of membership.
+    Middleware вже перевіряє, що користувач є власником або членом магазину,
+    вказаного у заголовку ``X-Shop-Slug``, тож сама наявність ``request.shop``
+    є достатнім підтвердженням участі.
     """
 
     message = "Не вказано активний магазин (X-Shop-Slug) або немає доступу."

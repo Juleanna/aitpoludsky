@@ -1,5 +1,5 @@
-"""Shared constants that are safe to import from any app without risking
-circular dependencies (this module imports nothing from Django models)."""
+"""Спільні константи, які безпечно імпортувати з будь-якого застосунку без ризику
+циклічних залежностей (цей модуль нічого не імпортує з Django-моделей)."""
 
 LANGUAGE_CHOICES = [
     ("uk", "Українська"),

@@ -6,6 +6,9 @@
     "catalog": "Katalog",
     "customers": "Kunden",
     "inventory": "Lager",
+    "discounts": "Rabatte",
+    "inbox": "Postfach",
+    "storefront": "Shopfront",
     "shops": "Shops"
   },
   "common": {
@@ -201,6 +204,62 @@
     "saveError": "Shop konnte nicht erstellt werden.",
     "firstNeedShop": "Zuerst Shop erstellen oder auswählen.",
     "goShops": "Zu den Shops →"
+  },
+  "discounts": {
+    "title": "Rabatte",
+    "subtitle": "Shop: {{shop}} · {{count}} Rabatte",
+    "newDiscount": "Neuer Rabatt",
+    "editDiscount": "Rabatt bearbeiten",
+    "code": "Code",
+    "name": "Name",
+    "kind": "Art",
+    "kindFixed": "Fest",
+    "value": "Wert",
+    "minSubtotal": "Min. Summe",
+    "startsAt": "Von",
+    "endsAt": "Bis",
+    "maxUses": "Max. Nutzungen",
+    "maxUsesHint": "Leer = unbegrenzt",
+    "isActive": "Aktiv",
+    "empty": "Keine Rabatte.",
+    "deleteConfirm": "Rabatt löschen?",
+    "colCode": "Code",
+    "colKind": "Art",
+    "colValue": "Wert",
+    "colMin": "Min. Summe",
+    "colUses": "Nutzungen",
+    "colStatus": "Status",
+    "apply": "Anwenden",
+    "remove": "Entfernen",
+    "promoCode": "Gutscheincode",
+    "invalid": "Ungültig"
+  },
+  "orderDrawer": {
+    "subtotal": "ZWISCHENSUMME",
+    "discountLine": "RABATT",
+    "totalAfter": "GESAMT"
+  },
+  "inbox": {
+    "title": "Postfach",
+    "subtitle": "Kunden-Threads (mock). Bereit für Instagram/Telegram/Viber.",
+    "newThread": "Neuer Thread",
+    "empty": "Keine Nachrichten.",
+    "send": "Senden",
+    "reply": "Ihre Antwort…",
+    "channels": {
+      "web": "Web",
+      "ig": "Instagram",
+      "tg": "Telegram",
+      "viber": "Viber",
+      "manual": "Manuell"
+    }
+  },
+  "storefront": {
+    "title": "Shopfront",
+    "subtitle": "{{shop}} · öffentliche Seite",
+    "viewPublic": "Öffentliche Shopfront öffnen →",
+    "noProducts": "Keine Produkte.",
+    "addToCart": "In den Warenkorb"
   },
   "topbar": {
     "searchPlaceholder": "Suche",

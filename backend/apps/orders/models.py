@@ -4,6 +4,7 @@ from django.db import models, transaction
 
 from apps.catalog.models import Product
 from apps.customers.models import Customer
+from apps.discounts.models import Discount
 from apps.shops.models import Shop
 
 
@@ -36,6 +37,15 @@ class Order(models.Model):
     status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING)
     channel = models.CharField(max_length=16, choices=Channel.choices, default=Channel.MANUAL)
     subtotal = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal("0.00"))
+    discount = models.ForeignKey(
+        Discount,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="orders",
+    )
+    discount_code = models.CharField(max_length=32, blank=True)
+    discount_amount = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal("0.00"))
     total = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal("0.00"))
     note = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -56,9 +66,9 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.number and self.shop_id:
-            # Naive auto-numbering for MVP. Under concurrent writes the unique
-            # constraint will raise IntegrityError; retry policy lives in the
-            # serializer (TODO when we see real contention).
+            # Наївна автонумерація для MVP. При конкурентних записах спрацює
+            # unique constraint (IntegrityError); політика retry — у serializer
+            # (TODO, коли з'явиться реальна конкуренція).
             with transaction.atomic():
                 last_num = (
                     Order.objects.filter(shop_id=self.shop_id)
@@ -77,9 +87,13 @@ class Order(models.Model):
         super().save(*args, **kwargs)
 
     def recompute_totals(self):
-        total = sum((item.line_total for item in self.items.all()), Decimal("0.00"))
-        self.subtotal = total
-        self.total = total
+        subtotal = sum((item.line_total for item in self.items.all()), Decimal("0.00"))
+        self.subtotal = subtotal
+        discount_amount = self.discount_amount or Decimal("0.00")
+        if discount_amount > subtotal:
+            discount_amount = subtotal
+            self.discount_amount = discount_amount
+        self.total = subtotal - discount_amount
 
 
 class OrderItem(models.Model):
