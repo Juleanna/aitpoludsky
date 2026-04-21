@@ -1054,7 +1054,26 @@ export function NewProductPage() {
           <section className="np-card">
             <h3 className="np-section-title">{t("newProduct.preview.title")}</h3>
             <div className="inline-preview" style={{ maxWidth: "none", aspectRatio: "3/4" }}>
-              <div className="product-thumb" data-tone="1" style={{ aspectRatio: "1" }} />
+              {/* Якщо користувач завантажив медіа — показуємо перше (головне)
+                  зображення замість нейтрального плейсхолдера. */}
+              {mediaPreviews.length > 0 ? (
+                <div
+                  style={{
+                    aspectRatio: "1",
+                    width: "100%",
+                    overflow: "hidden",
+                    background: "var(--bg-sunken)",
+                  }}
+                >
+                  <img
+                    src={mediaPreviews[0]}
+                    alt=""
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                  />
+                </div>
+              ) : (
+                <div className="product-thumb" data-tone="1" style={{ aspectRatio: "1" }} />
+              )}
               <div style={{ padding: 14 }}>
                 <div className="mono" style={{ fontSize: 11, color: "var(--text-3)" }}>
                   {(selectedCategoryName || t("newProduct.fields.categoryNone")).toUpperCase()}
