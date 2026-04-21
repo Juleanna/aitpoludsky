@@ -736,8 +736,21 @@ export function NewProductPage() {
         </div>
 
         {/* ── Права колонка ─────────────────────────────── */}
-        <aside style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <section className="np-card" style={{ position: "sticky", top: 80 }}>
+        {/* Обгортка-sticky тримає Preview і Маржу разом при скролі,
+            щоб вони не наїжджали одна на одну. */}
+        <aside>
+          <div
+            style={{
+              position: "sticky",
+              top: 80,
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+              maxHeight: "calc(100vh - 100px)",
+              overflowY: "auto",
+            }}
+          >
+          <section className="np-card">
             <h3 className="np-section-title">{t("newProduct.preview.title")}</h3>
             <div className="inline-preview" style={{ maxWidth: "none", aspectRatio: "3/4" }}>
               <div className="product-thumb" data-tone="1" style={{ aspectRatio: "1" }} />
@@ -787,6 +800,7 @@ export function NewProductPage() {
               </div>
             </div>
           </section>
+          </div>
         </aside>
       </form>
     </div>
