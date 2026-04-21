@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useShops } from "@/context/ShopContext";
 import { useTweaks } from "@/context/TweaksContext";
 import { useGlobalHotkeys } from "@/hooks/useGlobalHotkeys";
+import { MOD_KEY } from "@/utils/platform";
 import { Brand } from "./Brand";
 import { CommandPalette } from "./CommandPalette";
 import { Icon } from "./Icon";
@@ -330,7 +331,7 @@ export function Shell() {
             <div className="search" role="button" tabIndex={0} onClick={() => setCmdKOpen(true)}>
               <Icon name="search" size={14} />
               <span>{t("topbar.searchPlaceholder")}</span>
-              <span className="kbd">⌘K</span>
+              <span className="kbd">{MOD_KEY}K</span>
             </div>
 
             {/* Клавіатурні скорочення — відкриває модал довідки */}

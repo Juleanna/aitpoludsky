@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+import { MOD_KEY } from "@/utils/platform";
 import { Icon } from "./Icon";
 
 // Модальне вікно-довідка зі списком клавіатурних скорочень.
 // Закривається кліком на overlay, Esc або кнопкою ×.
+// MOD_KEY підставляє ⌘ на Mac і Ctrl на інших ОС.
 
 type Shortcut = { labelKey: string; keys: string[] };
 
 const NAVIGATION: Shortcut[] = [
-  { labelKey: "shortcuts.nav.commandPalette", keys: ["⌘", "K"] },
+  { labelKey: "shortcuts.nav.commandPalette", keys: [MOD_KEY, "K"] },
   { labelKey: "shortcuts.nav.dashboard", keys: ["G", "H"] },
   { labelKey: "shortcuts.nav.orders", keys: ["G", "O"] },
   { labelKey: "shortcuts.nav.catalog", keys: ["G", "C"] },
@@ -19,7 +21,7 @@ const NAVIGATION: Shortcut[] = [
 const ACTIONS: Shortcut[] = [
   { labelKey: "shortcuts.actions.newProduct", keys: ["N", "P"] },
   { labelKey: "shortcuts.actions.newOrder", keys: ["N", "O"] },
-  { labelKey: "shortcuts.actions.openMaria", keys: ["⌘", "/"] },
+  { labelKey: "shortcuts.actions.openMaria", keys: [MOD_KEY, "/"] },
   { labelKey: "shortcuts.actions.toggleTheme", keys: ["⇧", "D"] },
   { labelKey: "shortcuts.actions.thisHelp", keys: ["?"] },
 ];
